@@ -11,7 +11,6 @@
 		6C0BD46F27DA862D000AF3CD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0BD46E27DA862D000AF3CD /* ContentView.swift */; };
 		6C0BD47127DA862D000AF3CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47027DA862D000AF3CD /* Assets.xcassets */; };
 		6C0BD47427DA862D000AF3CD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47327DA862D000AF3CD /* Preview Assets.xcassets */; };
-		6C0BD48027DA8EB7000AF3CD /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 6C0BD47F27DA8EB7000AF3CD /* BottomSheet */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C0BD48027DA8EB7000AF3CD /* BottomSheet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +92,6 @@
 			);
 			name = BottomSheetExample;
 			packageProductDependencies = (
-				6C0BD47F27DA8EB7000AF3CD /* BottomSheet */,
 			);
 			productName = BottomSheetExample;
 			productReference = 6C0BD46927DA862D000AF3CD /* BottomSheetExample.app */;
@@ -358,13 +355,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		6C0BD47F27DA8EB7000AF3CD /* BottomSheet */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = BottomSheet;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6C0BD46127DA862C000AF3CD /* Project object */;
 }
