@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "BottomSheet",
+        "repositoryURL": "https://github.com/Wouter125/BottomSheet",
+        "state": {
+          "branch": null,
+          "revision": "bea23715f29529ea2dab8cabbf536f9d680ab7e6",
+          "version": "1.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
