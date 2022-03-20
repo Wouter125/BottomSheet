@@ -7,11 +7,11 @@ An iOS library for SwiftUI to create draggable sheet experiences similar to iOS 
 The library currently supports;
 
 - [x] Unlimited snap positions
-- [x] A realtime position callback
-- [x] Manual positioning
+- [x] Realtime position callback
+- [x] Absolute and relative positioning
 - [x] Customizable animation parameters
-- [x] A draggable sticky header
-- [x] Works with a scrollview and without a scrollview
+- [x] An optional sticky header
+- [x] Views with and without a scrollview
 
 ## How to install
 
@@ -25,13 +25,23 @@ Currently BottomSheet is only available through the [Swift Package Manager](http
 
 1. Import BottomSheet
 
-2. Create a custom enum with all snap positions. Order does not matter. It should look something like this;
+2. Create a custom enum with all snap positions. It can be relative or absolute. Order does not matter. Absolute positioning should look something like this;
 
 ```
 enum BottomSheetPosition: CGFloat, CaseIterable {
     case bottom = 182
     case middle = 320
     case top = 700
+}
+```
+
+Relative positioning should always be between 0 and 1 and can look like this;
+
+```
+enum BottomSheetRelativePosition: CGFloat, CaseIterable {
+    case bottom = 0.216
+    case middle = 0.355
+    case top = 0.829
 }
 ```
 
