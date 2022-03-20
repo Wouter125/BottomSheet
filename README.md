@@ -78,3 +78,8 @@ BottomSheetView(
 ## Example
 
 To give you an idea of how to use this library you can use the example that is attached to this repo. Simply clone it and run the `BottomSheetExample` target.
+
+## Roadmap
+
+1. Add landscape support
+2. Add iPad support
