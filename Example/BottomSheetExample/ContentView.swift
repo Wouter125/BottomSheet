@@ -8,14 +8,20 @@
 import SwiftUI
 import BottomSheet
 
-enum BottomSheetPosition: CGFloat, CaseIterable {
+enum BottomSheetAbsolutePosition: CGFloat, CaseIterable {
     case bottom = 182
     case middle = 320
     case top = 700
 }
 
+enum BottomSheetRelativePosition: CGFloat, CaseIterable {
+    case bottom = 0.216
+    case middle = 0.355
+    case top = 0.829
+}
+
 struct ContentView: View {
-    @State var position: BottomSheetPosition = .middle
+    @State var position: BottomSheetRelativePosition = .middle
 
     var body: some View {
         ZStack(alignment: .bottom) {
