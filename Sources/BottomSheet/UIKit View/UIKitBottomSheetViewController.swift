@@ -83,7 +83,14 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
     var content: () -> Content
 
     func makeUIViewController(context: Context) -> some UIScrollViewController {
-        let height = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue
+        var height: CGFloat = 0
+        
+        if PositionModel.type == .relative {
+            height = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue * UIScreen.main.bounds.height
+        } else {
+            height = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue
+        }
+        
         let viewController = UIScrollViewController(height: height)
 
         viewController.scrollViewDelegate = context.coordinator
@@ -110,17 +117,31 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         private var scrollOffset: CGFloat = 0
 
         private var topPosition: CGFloat {
+            if PositionModel.type == .relative {
+                return allPositions.last!.rawValue * UIScreen.main.bounds.height
+            }
+            
             return allPositions.last!.rawValue
         }
 
         private var bottomPosition: CGFloat {
+            if PositionModel.type == .relative {
+                return allPositions.first!.rawValue * UIScreen.main.bounds.height
+            }
+            
             return allPositions.first!.rawValue
         }
 
         /// Computed var that returns the bottom sheet position the bottom sheet is currently in
         private var bottomSheetPosition: PositionEnum? {
-            for position in allPositions where position.rawValue == representable.bottomSheetTranslation {
-                return position
+            if PositionModel.type == .relative {
+                for position in allPositions where position.rawValue * UIScreen.main.bounds.height == representable.bottomSheetTranslation {
+                    return position
+                }
+            } else {
+                for position in allPositions where position.rawValue == representable.bottomSheetTranslation {
+                    return position
+                }
             }
 
             return nil
@@ -168,14 +189,22 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
 
         private func snapBottomSheet(with yVelocity: CGFloat, scrollView: UIScrollView?) {
             let progress = (representable.bottomSheetTranslation - bottomPosition) / (topPosition - bottomPosition)
-
+            
             /// Loop through all positions
             for (idx, position) in allPositions.enumerated() {
                 guard idx + 1 < allPositions.count else { return }
 
+                var startPosition: CGFloat = 0
+                var endPosition: CGFloat = 0
+                
                 /// Grab the 2 positions next to each other
-                let startPosition = (position.rawValue - bottomPosition) / (topPosition - bottomPosition)
-                let endPosition = (allPositions[idx + 1].rawValue - bottomPosition) / (topPosition - bottomPosition)
+                if PositionModel.type == .relative {
+                    startPosition = ((position.rawValue * UIScreen.main.bounds.height) - bottomPosition) / (topPosition - bottomPosition)
+                    endPosition = ((allPositions[idx + 1].rawValue * UIScreen.main.bounds.height) - bottomPosition) / (topPosition - bottomPosition)
+                } else {
+                    startPosition = ((position.rawValue) - bottomPosition) / (topPosition - bottomPosition)
+                    endPosition = ((allPositions[idx + 1].rawValue) - bottomPosition) / (topPosition - bottomPosition)
+                }
 
                 /// Check if current drag movement is within that range
                 if startPosition...endPosition ~= progress {
@@ -216,7 +245,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             /// we don't need to scroll and only use the drag interation.
             if scrollView.contentSize.height > topPosition {
                 /// Check if we should drag or scroll the bottom sheet
-                 guard scrollView.isTracking else { return }
+                guard scrollView.isTracking else { return }
                 guard shouldDragBottomSheet(basedOn: scrollView.contentOffset.y, scrollView) else { return }
             }
 
@@ -236,8 +265,14 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             targetContentOffset: UnsafeMutablePointer<CGPoint>
         ) {
             // If the bottom sheet is not at the top, set the pointee
-            if representable.bottomSheetPosition.rawValue != topPosition {
-                targetContentOffset.pointee = .zero
+            if PositionModel.type == .relative {
+                if representable.bottomSheetPosition.rawValue * UIScreen.main.bounds.height != topPosition {
+                    targetContentOffset.pointee = .zero
+                }
+            } else {
+                if representable.bottomSheetPosition.rawValue != topPosition {
+                    targetContentOffset.pointee = .zero
+                }
             }
 
             snapBottomSheet(with: velocity.y, scrollView: scrollView)

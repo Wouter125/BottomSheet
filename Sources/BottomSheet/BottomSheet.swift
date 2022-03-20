@@ -1,11 +1,5 @@
 import SwiftUI
 
-public struct AnimationConfiguration {
-    var mass: Double
-    var stiffness: Double
-    var damping: Double
-}
-
 // swiftlint:disable line_length
 public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepresentable>: View where PositionEnum.RawValue == CGFloat, PositionEnum: CaseIterable, PositionEnum: Equatable {
     @State private var bottomSheetTranslation: CGFloat
@@ -17,7 +11,7 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
     let content: Content
     let frameHeight: CGFloat
 
-    private var animationConfiguration: AnimationConfiguration = AnimationConfiguration(
+    private var AnimationModel: BottomSheet.AnimationModel = BottomSheet.AnimationModel(
         mass: 1.2,
         stiffness: 200,
         damping: 25
@@ -30,13 +24,24 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
         @ViewBuilder header: () -> Header,
         @ViewBuilder content: () -> Content
     ) {
-        self._bottomSheetTranslation = State(initialValue: position.wrappedValue.rawValue)
+        let lastPosition = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue
+        
+        if lastPosition <= 1 {
+            PositionModel.type = .relative
+            
+            self._bottomSheetTranslation = State(initialValue: position.wrappedValue.rawValue * UIScreen.main.bounds.height)
+            self.frameHeight = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue * UIScreen.main.bounds.height
+        } else {
+            PositionModel.type = .absolute
+            
+            self._bottomSheetTranslation = State(initialValue: position.wrappedValue.rawValue)
+            self.frameHeight = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue
+        }
+        
         self._position = position
 
         self.header = header()
         self.content = content()
-
-        self.frameHeight = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue
     }
 
     public var body: some View {
@@ -53,11 +58,14 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
                     GeometryReader { _ in
                         content
                     }
-
                 }
             )
             .onChange(of: $position.wrappedValue) { newValue in
-                bottomSheetTranslation = newValue.rawValue
+                if PositionModel.type == .relative {
+                    bottomSheetTranslation = newValue.rawValue * UIScreen.main.bounds.height
+                } else {
+                    bottomSheetTranslation = newValue.rawValue
+                }
             }
             .onAnimationChange(of: bottomSheetTranslation) { newValue in
                 onBottomSheetDrag?(newValue)
@@ -66,12 +74,12 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
             .offset(y: (geometry.size.height + geometry.safeAreaInsets.bottom) - bottomSheetTranslation)
             .animation(
                 .interpolatingSpring(
-                    mass: animationConfiguration.mass,
-                    stiffness: animationConfiguration.stiffness,
-                    damping: animationConfiguration.damping,
+                    mass: AnimationModel.mass,
+                    stiffness: AnimationModel.stiffness,
+                    damping: AnimationModel.damping,
                     initialVelocity: initialVelocity * 10
                 ),
-                value: geometry.size.height - bottomSheetTranslation
+                value: geometry.size.height - (bottomSheetTranslation * geometry.size.height)
             )
         }
     }
@@ -81,7 +89,7 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
 extension BottomSheetView {
     public func animationCurve(mass: Double = 1.2, stiffness: Double = 200, damping: Double = 25) -> BottomSheetView {
         var bottomSheetView = self
-        bottomSheetView.animationConfiguration = AnimationConfiguration(
+        bottomSheetView.AnimationModel = BottomSheet.AnimationModel(
             mass: mass,
             stiffness: stiffness,
             damping: damping
