@@ -21,7 +21,7 @@ enum BottomSheetRelativePosition: CGFloat, CaseIterable {
 }
 
 struct ContentView: View {
-    @State var position: BottomSheetRelativePosition = .middle
+    @State var position: BottomSheetAbsolutePosition = .middle
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -82,6 +82,7 @@ struct ContentView: View {
                 }
             )
             .animationCurve(mass: 1, stiffness: 250)
+            .snapThreshold(1.8)
             .onBottomSheetDrag { translation in
                 print("Translation", translation)
             }
