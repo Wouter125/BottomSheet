@@ -34,6 +34,7 @@ class UIScrollViewController: UIViewController {
 
         view.addSubview(hostingController.view)
 
+        hostingController.view.backgroundColor = .clear
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
 
         view.addConstraints([
