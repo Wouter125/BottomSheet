@@ -66,6 +66,10 @@ struct ContentView: View {
                     }
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
+                    .background(
+                        Color(UIColor.systemBackground)
+                            .cornerRadius(12, corners: [.topLeft, .topRight])
+                    )
                 },
                 content: {
                     VStack(spacing: 0) {
@@ -77,6 +81,9 @@ struct ContentView: View {
 
                         Spacer(minLength: 54)
                     }
+                    .background(
+                        Color(UIColor.systemBackground)
+                    )
                     // Enable or disable the following line if we want to run the scrollview outside the safe-area
                     // .edgesIgnoringSafeArea([.bottom])
                 }
