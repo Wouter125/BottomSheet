@@ -21,7 +21,7 @@ enum BottomSheetRelativePosition: CGFloat, CaseIterable {
 }
 
 struct ContentView: View {
-    @State var position: BottomSheetAbsolutePosition = .middle
+    @State var position: BottomSheetRelativePosition = .middle
 
     var body: some View {
         ZStack(alignment: .bottom) {
