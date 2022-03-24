@@ -12,6 +12,7 @@ The library currently supports;
 - [x] Customizable animation parameters
 - [x] An optional sticky header
 - [x] Views with and without a scrollview
+- [x] Custom snap threshold
 
 ## How to install
 
@@ -61,7 +62,7 @@ BottomSheetView(
 }
 ```
 
-5. Optionally tweak the animation curve with a view modifier, or receive the current panel position with a callback;
+5. Optionally tweak the animation curve / snap threshold with a view modifier or receive the current panel position with a callback;
 
 ```
 BottomSheetView(
@@ -70,11 +71,26 @@ BottomSheetView(
     content: { }
 }
 .animationCurve(mass: 1, stiffness: 250)
+.snapThreshold(1.8)
 .onBottomSheetDrag { translation in
     print("Translation", translation)
 }
 ```
 
+## Interface
+
+| Modifier                 | Type   | Default | Description                                                                       |
+|--------------------------|--------|---------|-----------------------------------------------------------------------------------|
+| snapThreshold            | Double | 1.8     | The threshold to let the drag gesture ignore the distance. Value between 0 and 3. |
+| animationCurve.mass      | Double | 1.2     | The mass of the object attached to the spring.                                    |
+| animationCurve.stiffness | Double | 200     | The stiffness of the spring.                                                      |
+| animationCurve.damping   | Double | 25      | The spring damping value.                                                         |
+
 ## Example
 
 To give you an idea of how to use this library you can use the example that is attached to this repo. Simply clone it and run the `BottomSheetExample` target.
+
+## Roadmap
+
+1. Add landscape support
+2. Add iPad support
