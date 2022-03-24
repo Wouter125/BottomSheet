@@ -82,6 +82,7 @@ struct ContentView: View {
                 }
             )
             .animationCurve(mass: 1, stiffness: 250)
+            .snapThreshold(1.8)
             .onBottomSheetDrag { translation in
                 print("Translation", translation)
             }

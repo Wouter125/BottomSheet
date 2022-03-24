@@ -79,6 +79,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
     @Binding var initialVelocity: Double
     @Binding var bottomSheetPosition: PositionEnum
 
+    var threshold: Double
     var header: () -> Header
     var content: () -> Content
 
@@ -210,10 +211,16 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                 if startPosition...endPosition ~= progress {
                     /// Find the centerpoint between these two positions
                     let centerPosition = startPosition + ((endPosition - startPosition) / 2)
-
+                    
+                    // Normalize the threshold
+                    let threshold = max(
+                        0,
+                        min(representable.threshold, 3)
+                    )
+                    
                     /// If velocity is strong enough we don't have to move
                     /// over the center position we just snap to the correct position
-                    if abs(yVelocity) > 1.8 && scrollView?.contentOffset == .zero {
+                    if abs(yVelocity) > threshold && scrollView?.contentOffset == .zero {
                         if yVelocity > 0 {
                             let translation = (endPosition * (topPosition - bottomPosition)) + bottomPosition
                             representable.bottomSheetTranslation = translation

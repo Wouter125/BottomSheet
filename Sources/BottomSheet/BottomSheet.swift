@@ -10,12 +10,14 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
     let header: Header
     let content: Content
     let frameHeight: CGFloat
-
+    
     private var AnimationModel: BottomSheet.AnimationModel = BottomSheet.AnimationModel(
-        mass: 1.2,
-        stiffness: 200,
-        damping: 25
+        mass: BottomSheetDefaults.Animation.mass,
+        stiffness: BottomSheetDefaults.Animation.stiffness,
+        damping: BottomSheetDefaults.Animation.damping
     )
+    
+    private var threshold = BottomSheetDefaults.Interaction.threshold
 
     private var onBottomSheetDrag: ((_ position: CGFloat) -> Void)?
 
@@ -50,6 +52,7 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
                 bottomSheetTranslation: $bottomSheetTranslation,
                 initialVelocity: $initialVelocity,
                 bottomSheetPosition: $position,
+                threshold: threshold,
                 header: {
                     header
                         .zIndex(1)
@@ -94,6 +97,12 @@ extension BottomSheetView {
             stiffness: stiffness,
             damping: damping
         )
+        return bottomSheetView
+    }
+    
+    public func snapThreshold(_ threshold: Double = 0) -> BottomSheetView {
+        var bottomSheetView = self
+        bottomSheetView.threshold = threshold
         return bottomSheetView
     }
 }
