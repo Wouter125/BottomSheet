@@ -88,7 +88,7 @@ BottomSheetView(
 
 ## Example
 
-To give you an idea of how to use this library you can use the example that is attached to this repo. Simply clone it and run the `BottomSheetExample` target.
+To give you an idea of how to use this library you can use the example that is attached to this repo. Simply clone it and open the `BottomSheetExample` folder in Xcode.
 
 ## Roadmap
 
