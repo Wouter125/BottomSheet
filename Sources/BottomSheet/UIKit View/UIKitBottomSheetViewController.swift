@@ -284,12 +284,20 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                             representable.bottomSheetTranslation = translation
                         }
                     }
+<<<<<<< HEAD
                     
                     if let bottomSheetPosition = bottomSheetPosition {
                         representable.bottomSheetPosition = bottomSheetPosition
                     }
                     
                     return representable.bottomSheetTranslation
+=======
+
+                    /// Update the bottom sheet position so that callbacks know in which state the bottom sheet is
+                    if let bottomSheetPosition = bottomSheetPosition {
+                        representable.bottomSheetPosition = bottomSheetPosition
+                    }
+>>>>>>> 7590b10 (fix: implement missing updateUIViewController and safely unwrap position)
                 }
             }
             
