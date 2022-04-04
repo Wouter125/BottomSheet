@@ -105,7 +105,14 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         return viewController
     }
 
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) { }
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        uiViewController.hostingController.rootView = AnyView(VStack(spacing: 0) {
+            header()
+            content()
+        })
+        
+        uiViewController.view.setNeedsDisplay()
+    }
 
     func makeCoordinator() -> Coordinator {
         return Coordinator(self)
@@ -242,7 +249,9 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                     }
 
                     /// Update the bottom sheet position so that callbacks know in which state the bottom sheet is
-                    representable.bottomSheetPosition = bottomSheetPosition!
+                    if let bottomSheetPosition = bottomSheetPosition {
+                        representable.bottomSheetPosition = bottomSheetPosition
+                    }
                 }
             }
         }
