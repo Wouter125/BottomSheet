@@ -248,8 +248,8 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                         min(representable.threshold, 3)
                     )
                     
-                    /// If velocity is strong enough we don't have to move
-                    /// over the center position we just snap to the correct position
+                    /// If velocity is strong enough we don't have to move over the center position,
+                    /// we just snap to the correct position
                     if abs(yVelocity) > threshold && scrollView?.contentOffset == .zero {
                         if yVelocity > 0 {
                             let translation = (endPosition * (topPosition - bottomPosition)) + bottomPosition
@@ -259,8 +259,8 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                             representable.bottomSheetTranslation = translation
                         }
                     } else {
-                        /// Depending on whether the bottom sheet has been dragged
-                        /// over the center point snap it either to the bottom or top position
+                        /// Depending on whether the bottom sheet has been dragged over the center point,
+                        /// snap it either to the bottom or top position
                         if progress > centerPosition {
                             let translation = (endPosition * (topPosition - bottomPosition)) + bottomPosition
                             representable.bottomSheetTranslation = translation
@@ -304,17 +304,11 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             withVelocity velocity: CGPoint,
             targetContentOffset: UnsafeMutablePointer<CGPoint>
         ) {
-            // If the bottom sheet is not at the top, set the pointee
-            if PositionModel.type == .relative {
-                if representable.bottomSheetPosition.rawValue * UIScreen.main.bounds.height != topPosition {
-                    targetContentOffset.pointee = .zero
-                }
-            } else {
-                if representable.bottomSheetPosition.rawValue != topPosition {
-                    targetContentOffset.pointee = .zero
-                }
+            // TODO: <Wouter> velocity now mostly filters out the issue, but the pointee should only be 0 when in progression.
+            if abs(velocity.y) > 0.2 {
+                targetContentOffset.pointee = .zero
             }
-
+             
             snapBottomSheet(with: velocity.y, scrollView: scrollView)
 
             // Reset bottom sheet offset and translation so next time the delta starts at the same point
