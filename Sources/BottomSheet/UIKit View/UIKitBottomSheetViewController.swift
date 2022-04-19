@@ -79,8 +79,11 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
     @Binding var bottomSheetTranslation: CGFloat
     @Binding var initialVelocity: Double
     @Binding var bottomSheetPosition: PositionEnum
-
+    
+    var isDraggable: Bool
     var threshold: Double
+    var excludedPositions: [PositionEnum]
+    
     var header: () -> Header
     var content: () -> Content
 
@@ -106,6 +109,9 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
     }
 
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        context.coordinator.updateDraggable(isDraggable)
+        context.coordinator.updateExcludedPositions(excludedPositions)
+      
         uiViewController.hostingController.rootView = AnyView(VStack(spacing: 0) {
             header()
             content()
@@ -119,26 +125,29 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
     }
 
     class Coordinator: NSObject, UIScrollViewDelegate, PanGestureDelegate {
-        private let allPositions = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue })
+        private var allPositions = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue })
 
+        private var isDraggable: Bool = true
         private var representable: UIKitBottomSheetViewController
         private var bottomSheetTranslation: CGFloat = 0
         private var scrollOffset: CGFloat = 0
 
         private var topPosition: CGFloat {
+            let lastPosition = allPositions.last!.rawValue
             if PositionModel.type == .relative {
-                return allPositions.last!.rawValue * UIScreen.main.bounds.height
+                return lastPosition * UIScreen.main.bounds.height
             }
             
-            return allPositions.last!.rawValue
+            return lastPosition
         }
 
         private var bottomPosition: CGFloat {
+            let firstPosition = allPositions.first!.rawValue
             if PositionModel.type == .relative {
-                return allPositions.first!.rawValue * UIScreen.main.bounds.height
+                return firstPosition * UIScreen.main.bounds.height
             }
             
-            return allPositions.first!.rawValue
+            return firstPosition
         }
 
         /// Computed var that returns the bottom sheet position the bottom sheet is currently in
@@ -159,11 +168,19 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         init(_ representable: UIKitBottomSheetViewController) {
             self.representable = representable
         }
+        
+        internal func updateDraggable(_ isDraggable: Bool) {
+            self.isDraggable = isDraggable
+        }
+        
+        internal func updateExcludedPositions(_ positions: [PositionEnum]) {
+            allPositions = allPositions.filter{ !positions.contains($0) }
+        }
 
         private func shouldDragBottomSheet(basedOn scrollViewPosition: CGFloat, _ scrollView: UIScrollView) -> Bool {
             /// If the bottom sheet is in motion we should always proceed dragging before scrolling
             guard let bottomSheetPosition = bottomSheetPosition else { return true }
-
+            
             /// We should drag the bottom sheet up if we are minimum and moving upwards
             if bottomSheetPosition == allPositions.first! {
                 return scrollViewPosition > 0
@@ -187,6 +204,9 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         }
 
         private func translateBottomSheet(by translation: CGFloat) {
+            /// Disable panel movement if dragging is disabled
+            if !isDraggable { return }
+            
             representable.bottomSheetTranslation -= translation
 
             /// Limit the translation between it's max and min boundary
@@ -197,12 +217,14 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         }
 
         private func snapBottomSheet(with yVelocity: CGFloat, scrollView: UIScrollView?) {
+            if !isDraggable { return }
+            
             let progress = (representable.bottomSheetTranslation - bottomPosition) / (topPosition - bottomPosition)
             
             /// Loop through all positions
             for (idx, position) in allPositions.enumerated() {
                 guard idx + 1 < allPositions.count else { return }
-
+                
                 var startPosition: CGFloat = 0
                 var endPosition: CGFloat = 0
                 
@@ -249,6 +271,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                     }
 
                     /// Update the bottom sheet position so that callbacks know in which state the bottom sheet is
+                    // - TODO: <Wouter> This one sometimes fails to set the current position
                     if let bottomSheetPosition = bottomSheetPosition {
                         representable.bottomSheetPosition = bottomSheetPosition
                     }

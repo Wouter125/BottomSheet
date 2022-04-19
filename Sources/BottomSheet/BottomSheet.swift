@@ -18,6 +18,8 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
     )
     
     private var threshold = BottomSheetDefaults.Interaction.threshold
+    private var excludedPositions: [PositionEnum] = []
+    private var isDraggable = true
 
     private var onBottomSheetDrag: ((_ position: CGFloat) -> Void)?
 
@@ -32,12 +34,12 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
             PositionModel.type = .relative
             
             self._bottomSheetTranslation = State(initialValue: position.wrappedValue.rawValue * UIScreen.main.bounds.height)
-            self.frameHeight = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue * UIScreen.main.bounds.height
+            self.frameHeight = lastPosition * UIScreen.main.bounds.height
         } else {
             PositionModel.type = .absolute
             
             self._bottomSheetTranslation = State(initialValue: position.wrappedValue.rawValue)
-            self.frameHeight = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue
+            self.frameHeight = lastPosition
         }
         
         self._position = position
@@ -52,10 +54,14 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
                 bottomSheetTranslation: $bottomSheetTranslation,
                 initialVelocity: $initialVelocity,
                 bottomSheetPosition: $position,
+                isDraggable: isDraggable,
                 threshold: threshold,
+                excludedPositions: excludedPositions,
                 header: {
-                    header
-                        .zIndex(1)
+                    VStack {
+                        header
+                            .zIndex(1)
+                    }
                 },
                 content: {
                     GeometryReader { _ in
@@ -103,6 +109,18 @@ extension BottomSheetView {
     public func snapThreshold(_ threshold: Double = 0) -> BottomSheetView {
         var bottomSheetView = self
         bottomSheetView.threshold = threshold
+        return bottomSheetView
+    }
+    
+    public func isDraggable(_ isDraggable: Bool) -> BottomSheetView {
+        var bottomSheetView = self
+        bottomSheetView.isDraggable = isDraggable
+        return bottomSheetView
+    }
+    
+    public func excludeSnapPositions(_ positions: [PositionEnum]) -> BottomSheetView {
+        var bottomSheetView = self
+        bottomSheetView.excludedPositions = positions
         return bottomSheetView
     }
 }
