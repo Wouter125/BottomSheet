@@ -342,6 +342,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             withVelocity velocity: CGPoint,
             targetContentOffset: UnsafeMutablePointer<CGPoint>
         ) {
+<<<<<<< HEAD
             let startPosition = representable.bottomSheetTranslation
             
             if let snapPosition = snapBottomSheet(with: velocity.y, scrollView: scrollView) {
@@ -349,6 +350,14 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                     targetContentOffset.pointee = .zero
                 }
             }
+=======
+            // TODO: <Wouter> velocity now mostly filters out the issue, but the pointee should only be 0 when in progression.
+            if abs(velocity.y) > 0.2 {
+                targetContentOffset.pointee = .zero
+            }
+             
+            snapBottomSheet(with: velocity.y, scrollView: scrollView)
+>>>>>>> 9ee0171 (fix: small fix to prevent scrollview from snapping back to initial position after dragging)
 
             // Reset bottom sheet offset and translation so next time the delta starts at the same point
             scrollOffset = 0
