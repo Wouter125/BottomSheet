@@ -111,7 +111,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
         context.coordinator.updateDraggable(isDraggable)
         context.coordinator.updateExcludedPositions(excludedPositions)
-        
+      
         uiViewController.hostingController.rootView = AnyView(VStack(spacing: 0) {
             header()
             content()
