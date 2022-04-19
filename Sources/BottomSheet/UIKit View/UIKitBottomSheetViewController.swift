@@ -119,9 +119,12 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         context.coordinator.updateDraggable(isDraggable)
         context.coordinator.updateExcludedPositions(excludedPositions)
         
+<<<<<<< HEAD
         uiViewController.scrollViewDelegate = context.coordinator
         uiViewController.panGestureDelegate = context.coordinator
         
+=======
+>>>>>>> 83ec2cb (feat: included manually disable drag and exclude positions)
         uiViewController.hostingController.rootView = AnyView(VStack(spacing: 0) {
             header()
             content()
@@ -231,14 +234,23 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             )
         }
 
+<<<<<<< HEAD
         private func snapBottomSheet(with yVelocity: CGFloat, scrollView: UIScrollView?) -> CGFloat? {
             if !isDraggable { return nil }
+=======
+        private func snapBottomSheet(with yVelocity: CGFloat, scrollView: UIScrollView?) {
+            if !isDraggable { return }
+>>>>>>> 83ec2cb (feat: included manually disable drag and exclude positions)
             
             let progress = (representable.bottomSheetTranslation - bottomPosition) / (topPosition - bottomPosition)
             
             /// Loop through all positions
             for (idx, position) in allPositions.enumerated() {
+<<<<<<< HEAD
                 guard idx + 1 < allPositions.count else { return nil }
+=======
+                guard idx + 1 < allPositions.count else { return }
+>>>>>>> 83ec2cb (feat: included manually disable drag and exclude positions)
                 
                 var startPosition: CGFloat = 0
                 var endPosition: CGFloat = 0
@@ -294,6 +306,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
 =======
 
                     /// Update the bottom sheet position so that callbacks know in which state the bottom sheet is
+                    // - TODO: <Wouter> This one sometimes fails to set the current position
                     if let bottomSheetPosition = bottomSheetPosition {
                         representable.bottomSheetPosition = bottomSheetPosition
                     }
