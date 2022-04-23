@@ -216,14 +216,14 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             )
         }
 
-        private func snapBottomSheet(with yVelocity: CGFloat, scrollView: UIScrollView?) {
-            if !isDraggable { return }
+        private func snapBottomSheet(with yVelocity: CGFloat, scrollView: UIScrollView?) -> CGFloat? {
+            if !isDraggable { return nil }
             
             let progress = (representable.bottomSheetTranslation - bottomPosition) / (topPosition - bottomPosition)
             
             /// Loop through all positions
             for (idx, position) in allPositions.enumerated() {
-                guard idx + 1 < allPositions.count else { return }
+                guard idx + 1 < allPositions.count else { return nil }
                 
                 var startPosition: CGFloat = 0
                 var endPosition: CGFloat = 0
@@ -269,14 +269,16 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                             representable.bottomSheetTranslation = translation
                         }
                     }
-
-                    /// Update the bottom sheet position so that callbacks know in which state the bottom sheet is
-                    // - TODO: <Wouter> This one sometimes fails to set the current position
+                    
                     if let bottomSheetPosition = bottomSheetPosition {
                         representable.bottomSheetPosition = bottomSheetPosition
                     }
+                    
+                    return representable.bottomSheetTranslation
                 }
             }
+            
+            return nil
         }
 
         // MARK: - ScrollView Delegate
@@ -304,12 +306,13 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             withVelocity velocity: CGPoint,
             targetContentOffset: UnsafeMutablePointer<CGPoint>
         ) {
-            // TODO: <Wouter> velocity now mostly filters out the issue, but the pointee should only be 0 when in progression.
-            if abs(velocity.y) > 0.2 {
-                targetContentOffset.pointee = .zero
+            let startPosition = representable.bottomSheetTranslation
+            
+            if let snapPosition = snapBottomSheet(with: velocity.y, scrollView: scrollView) {
+                if startPosition != snapPosition {
+                    targetContentOffset.pointee = .zero
+                }
             }
-             
-            snapBottomSheet(with: velocity.y, scrollView: scrollView)
 
             // Reset bottom sheet offset and translation so next time the delta starts at the same point
             scrollOffset = 0
@@ -322,7 +325,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         }
 
         func didEndPanning(_ velocity: CGFloat) {
-            snapBottomSheet(with: (-velocity / 1000), scrollView: nil)
+            let _ = snapBottomSheet(with: (-velocity / 1000), scrollView: nil)
         }
     }
 }
