@@ -13,7 +13,7 @@ The library currently supports;
 - [x] An optional sticky header
 - [x] Views with and without a scrollview
 - [x] Custom snap threshold
-- [x] Dynamically exclude positions
+- [x] Dynamically exclude snap positions
 - [x] Dynamically disable and enable dragging  
 
 ## How to install
