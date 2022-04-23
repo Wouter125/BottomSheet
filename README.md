@@ -88,7 +88,7 @@ BottomSheetView(
 | animationCurve.stiffness | Double              | 200     | The stiffness of the spring.                                                      |
 | animationCurve.damping   | Double              | 25      | The spring damping value.                                                         |
 | isDraggable              | Boolean             | true    | Whether you can drag the BottomSheet or not.                                      |
-| excludeSnapPositions     | Array<PositionEnum> | []      | An array that contains the positions that you want to exclude when snapping       |
+| excludeSnapPositions     | Array<PositionEnum> | []      | An array that contains the enum positions that you want to exclude when snapping  |
 
 ## Example
 
