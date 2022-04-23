@@ -13,6 +13,8 @@ The library currently supports;
 - [x] An optional sticky header
 - [x] Views with and without a scrollview
 - [x] Custom snap threshold
+- [x] Dynamically exclude positions
+- [x] Dynamically disable and enable dragging  
 
 ## How to install
 
@@ -79,12 +81,14 @@ BottomSheetView(
 
 ## Interface
 
-| Modifier                 | Type   | Default | Description                                                                       |
-|--------------------------|--------|---------|-----------------------------------------------------------------------------------|
-| snapThreshold            | Double | 1.8     | The threshold to let the drag gesture ignore the distance. Value between 0 and 3. |
-| animationCurve.mass      | Double | 1.2     | The mass of the object attached to the spring.                                    |
-| animationCurve.stiffness | Double | 200     | The stiffness of the spring.                                                      |
-| animationCurve.damping   | Double | 25      | The spring damping value.                                                         |
+| Modifier                 | Type                | Default | Description                                                                       |
+|--------------------------|---------------------|---------|-----------------------------------------------------------------------------------|
+| snapThreshold            | Double              | 1.8     | The threshold to let the drag gesture ignore the distance. Value between 0 and 3. |
+| animationCurve.mass      | Double              | 1.2     | The mass of the object attached to the spring.                                    |
+| animationCurve.stiffness | Double              | 200     | The stiffness of the spring.                                                      |
+| animationCurve.damping   | Double              | 25      | The spring damping value.                                                         |
+| isDraggable              | Boolean             | true    | Whether you can drag the BottomSheet or not.                                      |
+| excludeSnapPositions     | Array<PositionEnum> | []      | An array that contains the positions that you want to exclude when snapping       |
 
 ## Example
 
