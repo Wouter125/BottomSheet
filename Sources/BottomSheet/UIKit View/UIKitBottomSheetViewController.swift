@@ -171,6 +171,10 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         /// Computed var that returns the bottom sheet position the bottom sheet is currently in
         private var bottomSheetPosition: PositionEnum? {
             if PositionModel.type == .relative {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4ac3fb5 (fix: fixed a bug where values would not compare due to rounding issues)
                 for position in allPositions where (position.rawValue * UIScreen.main.bounds.height).rounded(.up) == representable.bottomSheetTranslation.rounded(.up)  {
                     return position
                 }
