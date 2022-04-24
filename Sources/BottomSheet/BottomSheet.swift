@@ -70,6 +70,8 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
                 }
             )
             .onChange(of: $position.wrappedValue) { newValue in
+                position = newValue
+                
                 if PositionModel.type == .relative {
                     bottomSheetTranslation = newValue.rawValue * UIScreen.main.bounds.height
                 } else {
