@@ -70,6 +70,8 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
                 }
             )
             .onChange(of: $position.wrappedValue) { newValue in
+                position = newValue
+                
                 if PositionModel.type == .relative {
                     bottomSheetTranslation = newValue.rawValue * UIScreen.main.bounds.height
                 } else {
@@ -78,8 +80,6 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
             }
             .onAnimationChange(of: bottomSheetTranslation) { newValue in
                 onBottomSheetDrag?(newValue)
-                
-                
             }
             .frame(height: frameHeight)
             .offset(y: (geometry.size.height + geometry.safeAreaInsets.bottom) - bottomSheetTranslation)

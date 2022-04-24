@@ -153,11 +153,12 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         /// Computed var that returns the bottom sheet position the bottom sheet is currently in
         private var bottomSheetPosition: PositionEnum? {
             if PositionModel.type == .relative {
-                for position in allPositions where position.rawValue * UIScreen.main.bounds.height == representable.bottomSheetTranslation {
+
+                for position in allPositions where (position.rawValue * UIScreen.main.bounds.height).rounded(.up) == representable.bottomSheetTranslation.rounded(.up)  {
                     return position
                 }
             } else {
-                for position in allPositions where position.rawValue == representable.bottomSheetTranslation {
+                for position in allPositions where position.rawValue.rounded(.up) == representable.bottomSheetTranslation.rounded(.up) {
                     return position
                 }
             }
@@ -282,7 +283,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         }
 
         // MARK: - ScrollView Delegate
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {            
             /// If the scrollview is smaller than the bottom sheet
             /// we don't need to scroll and only use the drag interation.
             if scrollView.contentSize.height > topPosition {
@@ -296,7 +297,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             let translationDelta = translation - bottomSheetTranslation
             translateBottomSheet(by: translationDelta)
             bottomSheetTranslation = translation
-
+            
             /// Keep the view at the top when the bottom sheet is being dragged
             scrollView.contentOffset.y = .zero
         }
@@ -309,7 +310,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             let startPosition = representable.bottomSheetTranslation
             
             if let snapPosition = snapBottomSheet(with: velocity.y, scrollView: scrollView) {
-                if startPosition != snapPosition {
+                if startPosition.rounded(.up) != snapPosition.rounded(.up) {
                     targetContentOffset.pointee = .zero
                 }
             }
