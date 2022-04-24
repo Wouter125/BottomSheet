@@ -80,6 +80,8 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
             }
             .onAnimationChange(of: bottomSheetTranslation) { newValue in
                 onBottomSheetDrag?(newValue)
+                
+                
             }
             .frame(height: frameHeight)
             .offset(y: (geometry.size.height + geometry.safeAreaInsets.bottom) - bottomSheetTranslation)
