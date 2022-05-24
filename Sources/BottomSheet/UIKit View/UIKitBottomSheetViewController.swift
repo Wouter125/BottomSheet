@@ -40,17 +40,23 @@ class UIScrollViewController: UIViewController {
         view.addConstraints([
             hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            hostingController.view.heightAnchor.constraint(equalToConstant: height)
+            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-
-        let scrollViews = view.findViews(subclassOf: UIScrollView.self)
+        
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan(_:)))
         view.addGestureRecognizer(panGestureRecognizer)
-
+        
+        updateScrollView()
+    }
+    
+    func updateScrollView() {
+        let scrollViews = view.findViews(subclassOf: UIScrollView.self)
+        
         if !scrollViews.isEmpty {
             scrollViews[0].showsVerticalScrollIndicator = true
             scrollViews[0].delegate = scrollViewDelegate
@@ -105,19 +111,28 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             header()
             content()
         })
+        
         return viewController
     }
 
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
         context.coordinator.updateDraggable(isDraggable)
         context.coordinator.updateExcludedPositions(excludedPositions)
-      
+        
+        uiViewController.scrollViewDelegate = context.coordinator
+        uiViewController.panGestureDelegate = context.coordinator
+        
         uiViewController.hostingController.rootView = AnyView(VStack(spacing: 0) {
             header()
             content()
         })
         
         uiViewController.view.setNeedsDisplay()
+        
+        // Wait for the UI to be layed out
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            uiViewController.updateScrollView()
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -153,7 +168,6 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         /// Computed var that returns the bottom sheet position the bottom sheet is currently in
         private var bottomSheetPosition: PositionEnum? {
             if PositionModel.type == .relative {
-
                 for position in allPositions where (position.rawValue * UIScreen.main.bounds.height).rounded(.up) == representable.bottomSheetTranslation.rounded(.up)  {
                     return position
                 }
@@ -283,7 +297,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         }
 
         // MARK: - ScrollView Delegate
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {            
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
             /// If the scrollview is smaller than the bottom sheet
             /// we don't need to scroll and only use the drag interation.
             if scrollView.contentSize.height > topPosition {

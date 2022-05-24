@@ -20,7 +20,7 @@ enum BottomSheetRelativePosition: CGFloat, CaseIterable {
     case top = 0.829
 }
 
-struct ContentView: View {
+struct StocksExampleView: View {
     @State var position: BottomSheetRelativePosition = .middle
 
     var body: some View {
@@ -152,8 +152,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct StocksExampleView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        StocksExampleView()
     }
 }
