@@ -297,7 +297,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         }
 
         // MARK: - ScrollView Delegate
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {            
             /// If the scrollview is smaller than the bottom sheet
             /// we don't need to scroll and only use the drag interation.
             if scrollView.contentSize.height > topPosition {
