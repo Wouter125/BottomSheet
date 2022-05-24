@@ -120,11 +120,17 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         context.coordinator.updateExcludedPositions(excludedPositions)
         
 <<<<<<< HEAD
+<<<<<<< HEAD
         uiViewController.scrollViewDelegate = context.coordinator
         uiViewController.panGestureDelegate = context.coordinator
         
 =======
 >>>>>>> 83ec2cb (feat: included manually disable drag and exclude positions)
+=======
+        uiViewController.scrollViewDelegate = context.coordinator
+        uiViewController.panGestureDelegate = context.coordinator
+        
+>>>>>>> 3602461 (fix: added example overview and included small updateview bugfixes)
         uiViewController.hostingController.rootView = AnyView(VStack(spacing: 0) {
             header()
             content()
@@ -171,10 +177,6 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         /// Computed var that returns the bottom sheet position the bottom sheet is currently in
         private var bottomSheetPosition: PositionEnum? {
             if PositionModel.type == .relative {
-<<<<<<< HEAD
-=======
-
->>>>>>> 4ac3fb5 (fix: fixed a bug where values would not compare due to rounding issues)
                 for position in allPositions where (position.rawValue * UIScreen.main.bounds.height).rounded(.up) == representable.bottomSheetTranslation.rounded(.up)  {
                     return position
                 }
@@ -238,23 +240,15 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             )
         }
 
-<<<<<<< HEAD
+
         private func snapBottomSheet(with yVelocity: CGFloat, scrollView: UIScrollView?) -> CGFloat? {
             if !isDraggable { return nil }
-=======
-        private func snapBottomSheet(with yVelocity: CGFloat, scrollView: UIScrollView?) {
-            if !isDraggable { return }
->>>>>>> 83ec2cb (feat: included manually disable drag and exclude positions)
             
             let progress = (representable.bottomSheetTranslation - bottomPosition) / (topPosition - bottomPosition)
             
             /// Loop through all positions
             for (idx, position) in allPositions.enumerated() {
-<<<<<<< HEAD
                 guard idx + 1 < allPositions.count else { return nil }
-=======
-                guard idx + 1 < allPositions.count else { return }
->>>>>>> 83ec2cb (feat: included manually disable drag and exclude positions)
                 
                 var startPosition: CGFloat = 0
                 var endPosition: CGFloat = 0
@@ -322,7 +316,7 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         }
 
         // MARK: - ScrollView Delegate
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {            
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
             /// If the scrollview is smaller than the bottom sheet
             /// we don't need to scroll and only use the drag interation.
             if scrollView.contentSize.height > topPosition {
