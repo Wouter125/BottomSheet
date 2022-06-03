@@ -4,7 +4,8 @@ import SwiftUI
 public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepresentable>: View where PositionEnum.RawValue == CGFloat, PositionEnum: CaseIterable, PositionEnum: Equatable {
     @State private var bottomSheetTranslation: CGFloat
     @State private var initialVelocity: Double = 0.0
-
+    @State private var shouldAnimate: Bool = false
+ 
     @Binding var position: PositionEnum
 
     let header: Header
@@ -69,6 +70,11 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
                     }
                 }
             )
+            .onAppear {
+                DispatchQueue.main.async {
+                    shouldAnimate = true
+                }
+            }
             .onChange(of: $position.wrappedValue) { newValue in
                 position = newValue
                 
@@ -84,13 +90,15 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
             .frame(height: frameHeight)
             .offset(y: (geometry.size.height + geometry.safeAreaInsets.bottom) - bottomSheetTranslation)
             .animation(
-                .interpolatingSpring(
-                    mass: AnimationModel.mass,
-                    stiffness: AnimationModel.stiffness,
-                    damping: AnimationModel.damping,
-                    initialVelocity: initialVelocity * 10
-                ),
-                value: geometry.size.height - (bottomSheetTranslation * geometry.size.height)
+                !shouldAnimate ?
+                    .none :
+                    .interpolatingSpring(
+                        mass: AnimationModel.mass,
+                        stiffness: AnimationModel.stiffness,
+                        damping: AnimationModel.damping,
+                        initialVelocity: initialVelocity * 10
+                    ),
+                    value: geometry.size.height - (bottomSheetTranslation * geometry.size.height)
             )
         }
     }
