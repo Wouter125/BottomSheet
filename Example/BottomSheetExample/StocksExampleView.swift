@@ -8,20 +8,20 @@
 import SwiftUI
 import BottomSheet
 
-enum BottomSheetAbsolutePosition: CGFloat, CaseIterable {
+enum StocksBottomSheetAbsolutePosition: CGFloat, CaseIterable {
     case bottom = 182
     case middle = 320
     case top = 700
 }
 
-enum BottomSheetRelativePosition: CGFloat, CaseIterable {
+enum StocksBottomSheetRelativePosition: CGFloat, CaseIterable {
     case bottom = 0.216
     case middle = 0.355
     case top = 0.829
 }
 
 struct StocksExampleView: View {
-    @State var position: BottomSheetRelativePosition = .middle
+    @State var position: StocksBottomSheetRelativePosition = .middle
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -66,10 +66,6 @@ struct StocksExampleView: View {
                     }
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
-                    .background(
-                        Color(UIColor.systemBackground)
-                            .cornerRadius(12, corners: [.topLeft, .topRight])
-                    )
                 },
                 content: {
                     VStack(spacing: 0) {
@@ -81,17 +77,21 @@ struct StocksExampleView: View {
 
                         Spacer(minLength: 54)
                     }
-                    .background(
-                        Color(UIColor.systemBackground)
-                    )
                     // Enable or disable the following line if we want to run the scrollview outside the safe-area
                     // .edgesIgnoringSafeArea([.bottom])
                 }
             )
+            .background(
+                Color(UIColor.systemBackground)
+                    .cornerRadius(
+                        12,
+                        corners: [.topLeft, .topRight]
+                    )
+            )
             .animationCurve(mass: 1, stiffness: 250)
             .snapThreshold(1.8)
-            .onBottomSheetDrag { translation in
-                print("Translation", translation)
+            .onBottomSheetDrag { translation, modulated in
+                print("Translation", translation, modulated)
             }
 
             VStack(spacing: 0) {
@@ -112,9 +112,9 @@ struct StocksExampleView: View {
             )
             .zIndex(1)
         }
+        .navigationBarTitle("", displayMode: .inline)
         .background(
             Color(UIColor.systemFill)
-                .edgesIgnoringSafeArea([.all])
         )
     }
     

@@ -8,78 +8,6 @@
 import Foundation
 import SwiftUI
 
-protocol PanGestureDelegate: AnyObject {
-    func didBeganPanning(_ translation: CGFloat)
-    func didEndPanning(_ velocity: CGFloat)
-}
-
-class UIScrollViewController: UIViewController {
-    var hostingController: UIHostingController<AnyView> = UIHostingController(rootView: AnyView(EmptyView()))
-    var height: CGFloat
-
-    weak var scrollViewDelegate: UIScrollViewDelegate?
-    weak var panGestureDelegate: PanGestureDelegate?
-
-    init(height: CGFloat) {
-        self.height = height
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        view.addSubview(hostingController.view)
-
-        hostingController.view.backgroundColor = .clear
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addConstraints([
-            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan(_:)))
-        view.addGestureRecognizer(panGestureRecognizer)
-        
-        updateScrollView()
-    }
-    
-    func updateScrollView() {
-        let scrollViews = view.findViews(subclassOf: UIScrollView.self)
-        
-        if !scrollViews.isEmpty {
-            scrollViews[0].showsVerticalScrollIndicator = true
-            scrollViews[0].delegate = scrollViewDelegate
-        }
-    }
-
-    @objc private func didPan(_ sender: UIPanGestureRecognizer) {
-        let translation = sender.translation(in: view).y
-        let velocity = sender.velocity(in: view).y
-
-        switch sender.state {
-        case .changed:
-            panGestureDelegate?.didBeganPanning(translation)
-        case .ended:
-            panGestureDelegate?.didEndPanning(velocity)
-        default:
-            break
-        }
-
-        sender.setTranslation(CGPoint.zero, in: view)
-    }
-}
-
 // swiftlint:disable line_length
 struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum: RawRepresentable>: UIViewControllerRepresentable where PositionEnum.RawValue == CGFloat, PositionEnum: CaseIterable, PositionEnum: Equatable {
     @Binding var bottomSheetTranslation: CGFloat
@@ -89,6 +17,9 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
     var isDraggable: Bool
     var threshold: Double
     var excludedPositions: [PositionEnum]
+    
+    var background: AnyView
+    var alignment: Alignment
     
     var header: () -> Header
     var content: () -> Content
@@ -105,12 +36,17 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         let viewController = UIScrollViewController(height: height)
 
         viewController.scrollViewDelegate = context.coordinator
-        viewController.panGestureDelegate = context.coordinator
 
-        viewController.hostingController.rootView = AnyView(VStack(spacing: 0) {
-            header()
-            content()
-        })
+        viewController.hostingController.rootView = AnyView(
+            VStack(spacing: 0) {
+                header()
+                content()
+            }
+            .background(
+                background.edgesIgnoringSafeArea(.bottom),
+                alignment: alignment
+            )
+        )
         
         return viewController
     }
@@ -119,22 +55,19 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         context.coordinator.updateDraggable(isDraggable)
         context.coordinator.updateExcludedPositions(excludedPositions)
         
-<<<<<<< HEAD
-<<<<<<< HEAD
         uiViewController.scrollViewDelegate = context.coordinator
         uiViewController.panGestureDelegate = context.coordinator
         
-=======
->>>>>>> 83ec2cb (feat: included manually disable drag and exclude positions)
-=======
-        uiViewController.scrollViewDelegate = context.coordinator
-        uiViewController.panGestureDelegate = context.coordinator
-        
->>>>>>> 3602461 (fix: added example overview and included small updateview bugfixes)
-        uiViewController.hostingController.rootView = AnyView(VStack(spacing: 0) {
-            header()
-            content()
-        })
+        uiViewController.hostingController.rootView = AnyView(
+            VStack(spacing: 0) {
+                header()
+                content()
+            }
+            .background(
+                background.edgesIgnoringSafeArea(.bottom),
+                alignment: alignment
+            )
+        )
         
         uiViewController.view.setNeedsDisplay()
         
@@ -142,13 +75,16 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             uiViewController.updateScrollView()
         }
+        
+        // Update the draggable gesture based on the setting
+//        uiViewController.updateDragGesture(isDraggable)
     }
 
     func makeCoordinator() -> Coordinator {
         return Coordinator(self)
     }
 
-    class Coordinator: NSObject, UIScrollViewDelegate, PanGestureDelegate {
+    class Coordinator: NSObject, UIScrollViewDelegate {
         private var allPositions = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue })
 
         private var isDraggable: Bool = true
@@ -294,21 +230,12 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                             representable.bottomSheetTranslation = translation
                         }
                     }
-<<<<<<< HEAD
                     
                     if let bottomSheetPosition = bottomSheetPosition {
                         representable.bottomSheetPosition = bottomSheetPosition
                     }
                     
                     return representable.bottomSheetTranslation
-=======
-
-                    /// Update the bottom sheet position so that callbacks know in which state the bottom sheet is
-                    // - TODO: <Wouter> This one sometimes fails to set the current position
-                    if let bottomSheetPosition = bottomSheetPosition {
-                        representable.bottomSheetPosition = bottomSheetPosition
-                    }
->>>>>>> 7590b10 (fix: implement missing updateUIViewController and safely unwrap position)
                 }
             }
             
@@ -340,7 +267,6 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
             withVelocity velocity: CGPoint,
             targetContentOffset: UnsafeMutablePointer<CGPoint>
         ) {
-<<<<<<< HEAD
             let startPosition = representable.bottomSheetTranslation
             
             if let snapPosition = snapBottomSheet(with: velocity.y, scrollView: scrollView) {
@@ -348,27 +274,10 @@ struct UIKitBottomSheetViewController<Header: View, Content: View, PositionEnum:
                     targetContentOffset.pointee = .zero
                 }
             }
-=======
-            // TODO: <Wouter> velocity now mostly filters out the issue, but the pointee should only be 0 when in progression.
-            if abs(velocity.y) > 0.2 {
-                targetContentOffset.pointee = .zero
-            }
-             
-            snapBottomSheet(with: velocity.y, scrollView: scrollView)
->>>>>>> 9ee0171 (fix: small fix to prevent scrollview from snapping back to initial position after dragging)
 
             // Reset bottom sheet offset and translation so next time the delta starts at the same point
             scrollOffset = 0
             bottomSheetTranslation = 0
-        }
-
-        // MARK: - Pan Gesture Delegate
-        func didBeganPanning(_ translation: CGFloat) {
-            translateBottomSheet(by: translation)
-        }
-
-        func didEndPanning(_ velocity: CGFloat) {
-            let _ = snapBottomSheet(with: (-velocity / 1000), scrollView: nil)
         }
     }
 }

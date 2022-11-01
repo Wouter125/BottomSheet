@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AnimationModel.swift
 //  
 //
 //  Created by Wouter van de Kamp on 20/03/2022.
