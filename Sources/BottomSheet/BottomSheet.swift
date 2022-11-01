@@ -5,7 +5,9 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
     @State private var bottomSheetTranslation: CGFloat
     @State private var initialVelocity: Double = 0.0
     @State private var shouldAnimate: Bool = false
- 
+    
+    @GestureState private var translation: CGFloat = 0
+    
     @Binding var position: PositionEnum
 
     let header: Header
@@ -21,15 +23,23 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
     private var threshold = BottomSheetDefaults.Interaction.threshold
     private var excludedPositions: [PositionEnum] = []
     private var isDraggable = true
+    private var background: AnyView = AnyView(EmptyView())
+    private var alignment: Alignment = .center
 
-    private var onBottomSheetDrag: ((_ position: CGFloat) -> Void)?
+    private var onBottomSheetDrag: ((_ position: CGFloat, _ modulatedPosition: CGFloat) -> Void)?
+    
+    private var firstPosition: CGFloat
+    private var lastPosition: CGFloat
 
     public init(
         position: Binding<PositionEnum>,
         @ViewBuilder header: () -> Header,
         @ViewBuilder content: () -> Content
     ) {
-        let lastPosition = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue
+        let positions = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue })
+        
+        firstPosition = positions.first!.rawValue
+        lastPosition = positions.last!.rawValue
         
         if lastPosition <= 1 {
             PositionModel.type = .relative
@@ -58,11 +68,20 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
                 isDraggable: isDraggable,
                 threshold: threshold,
                 excludedPositions: excludedPositions,
+                background: background,
+                alignment: alignment,
                 header: {
                     VStack {
                         header
                             .zIndex(1)
                     }
+                    .gesture (
+                        DragGesture().updating($translation) { currentState, gestureState, _ in
+                            let delta = gestureState - currentState.translation.height
+                            print(delta)
+                            gestureState = currentState.translation.height
+                        }
+                    )
                 },
                 content: {
                     GeometryReader { _ in
@@ -85,10 +104,22 @@ public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepr
                 }
             }
             .onAnimationChange(of: bottomSheetTranslation) { newValue in
-                onBottomSheetDrag?(newValue)
+                let modulatedValue = newValue.modulate(
+                    from: [
+                        firstPosition * geometry.size.height,
+                        lastPosition * geometry.size.height
+                    ],
+                    to: [
+                        0,
+                        1
+                    ],
+                    limit: true
+                )
+                
+                onBottomSheetDrag?(newValue, modulatedValue)
             }
             .frame(height: frameHeight)
-            .offset(y: (geometry.size.height + geometry.safeAreaInsets.bottom) - bottomSheetTranslation)
+            .offset(y: (geometry.size.height + geometry.safeAreaInsets.bottom) + translation)
             .animation(
                 !shouldAnimate ?
                     .none :
@@ -116,6 +147,15 @@ extension BottomSheetView {
         return bottomSheetView
     }
     
+    public func background<Background: View>(
+        _ background: Background,
+        alignment: Alignment = .center
+    ) -> BottomSheetView {
+        var bottomSheetView = self
+        bottomSheetView.background = AnyView(background)
+        return bottomSheetView
+    }
+    
     public func snapThreshold(_ threshold: Double = 0) -> BottomSheetView {
         var bottomSheetView = self
         bottomSheetView.threshold = threshold
@@ -137,7 +177,7 @@ extension BottomSheetView {
 
 // MARK: - Closures
 extension BottomSheetView {
-    public func onBottomSheetDrag(perform: @escaping (CGFloat) -> Void) -> BottomSheetView {
+    public func onBottomSheetDrag(perform: @escaping (CGFloat, CGFloat?) -> Void) -> BottomSheetView {
         var bottomSheetView = self
         bottomSheetView.onBottomSheetDrag = perform
         return bottomSheetView

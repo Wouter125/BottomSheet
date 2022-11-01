@@ -8,19 +8,26 @@
 import SwiftUI
 
 struct ExampleOverview: View {
-    var items = ["Stocks Examples"]
-    var views = [StocksExampleView()]
+    var items = ["Stocks Examples", "Maps Example", "Refactor Example"]
+    var views: [AnyView] = [
+        AnyView(StocksExampleView()),
+        AnyView(MapsExampleView()),
+        AnyView(RefactorExample())
+    ]
     
     var body: some View {
-        NavigationView {
-            List(items.indices, id: \.self) { idx in
-                NavigationLink(destination: views[idx]) {
-                    Text(items[idx])
-                }
-            }
-            .listStyle(.grouped)
-            .navigationTitle("Examples")
-        }
+        RefactorExample()
+//        NavigationView {
+//            List(items.indices, id: \.self) { idx in
+//                NavigationLink(destination: views[idx]) {
+//                    Text(items[idx])
+//                }
+//            }
+//            .background(Color(UIColor.systemGroupedBackground))
+//            .listStyle(.grouped)
+//            .navigationTitle("Examples")
+//        }
+//        .navigationViewStyle(.stack)
     }
 }
 
