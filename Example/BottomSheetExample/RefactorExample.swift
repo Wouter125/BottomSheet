@@ -9,7 +9,7 @@ import SwiftUI
 import BottomSheet
 
 struct RefactorExample: View {
-    @State var selectedDetent: PresentationDetent = .large
+    @State var selectedDetent: BottomSheet.PresentationDetent = .large
     @State var isPresented: Bool = false
     
     var body: some View {

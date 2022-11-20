@@ -10,7 +10,7 @@
 		6C0BD46D27DA862D000AF3CD /* BottomSheetExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0BD46C27DA862D000AF3CD /* BottomSheetExampleApp.swift */; };
 		6C0BD47127DA862D000AF3CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47027DA862D000AF3CD /* Assets.xcassets */; };
 		6C0BD47427DA862D000AF3CD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47327DA862D000AF3CD /* Preview Assets.xcassets */; };
-		6C1DE0122889CF1A003C6EE9 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 6C1DE0112889CF1A003C6EE9 /* BottomSheet */; };
+		6C6EB0B6292AEADC00106A1D /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 6C6EB0B5292AEADC00106A1D /* BottomSheet */; };
 		6C763147283D774500463709 /* ExampleOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C763146283D774500463709 /* ExampleOverview.swift */; };
 		6C7F2F0A28CCE17A0070CBC2 /* RefactorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7F2F0928CCE17A0070CBC2 /* RefactorExample.swift */; };
 		6CDF5A0D27ED33C7004609F4 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDF5A0C27ED33C7004609F4 /* CornerRadius.swift */; };
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C1DE0122889CF1A003C6EE9 /* BottomSheet in Frameworks */,
+				6C6EB0B6292AEADC00106A1D /* BottomSheet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +110,7 @@
 			);
 			name = BottomSheetExample;
 			packageProductDependencies = (
-				6C1DE0112889CF1A003C6EE9 /* BottomSheet */,
+				6C6EB0B5292AEADC00106A1D /* BottomSheet */,
 			);
 			productName = BottomSheetExample;
 			productReference = 6C0BD46927DA862D000AF3CD /* BottomSheetExample.app */;
@@ -311,7 +311,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -342,7 +342,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -380,7 +380,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6C1DE0112889CF1A003C6EE9 /* BottomSheet */ = {
+		6C6EB0B5292AEADC00106A1D /* BottomSheet */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BottomSheet;
 		};
