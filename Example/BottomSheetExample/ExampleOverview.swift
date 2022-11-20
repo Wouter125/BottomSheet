@@ -10,8 +10,8 @@ import SwiftUI
 struct ExampleOverview: View {
     var items = ["Stocks Examples", "Maps Example", "Refactor Example"]
     var views: [AnyView] = [
-        AnyView(StocksExampleView()),
-        AnyView(MapsExampleView()),
+//        AnyView(StocksExampleView()),
+//        AnyView(MapsExampleView()),
         AnyView(RefactorExample())
     ]
     
