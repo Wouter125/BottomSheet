@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum PresentationDetent: Hashable {
+public enum PresentationDetent: Hashable {
     case small
     case medium
     case large
@@ -21,7 +21,7 @@ enum PresentationDetent: Hashable {
         return lhs.size == rhs.size
     }
     
-    var size: CGFloat {
+    public var size: CGFloat {
         switch self {
         case .small:
             return PresentationDetentDefaults.small
