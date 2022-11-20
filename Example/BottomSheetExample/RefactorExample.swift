@@ -6,36 +6,49 @@
 //
 
 import SwiftUI
+import BottomSheet
 
 struct RefactorExample: View {
-    @State var selectedDetent: PresentationDetent = .medium
+    @State var selectedDetent: PresentationDetent = .large
+    @State var isPresented: Bool = false
     
     var body: some View {
-        SheeetView(
-            header: {
-                HStack {
-                    Text("Header")
-                    Spacer()
-                }
-                .frame(height: 48)
-                .background(Color.orange)
-            },
-            content: {
-                VStack(spacing: 0) {
-                    ForEach(0..<100, id: \.self) { obj in
-                        HStack {
-                            Spacer()
-                            Text("\(obj)")
-                            Spacer()
+        VStack {
+            Button("Test", action: {
+                isPresented.toggle()
+            })
+            Text("\(selectedDetent.size)")
+            Spacer()
+        }
+            .sheetPlus(
+                isPresented: $isPresented,
+                onDismiss: {
+                  print("hallo")
+                },
+                header: {
+                    HStack {
+                        Text("Header")
+                        Spacer()
+                    }
+                    .frame(height: 48)
+                    .background(Color.orange)
+                },
+                main: {
+                    VStack(spacing: 0) {
+                        ForEach(0..<100, id: \.self) { obj in
+                            HStack {
+                                Spacer()
+                                Text("\(obj)")
+                                Spacer()
+                            }
                         }
                     }
+                    .presentationDetentsPlus(
+                        [.medium, .large],
+                        selection: $selectedDetent
+                    )
                 }
-            }
-        )
-        .presentationDetents(
-            [.small, .medium, .large],
-            selection: $selectedDetent
-        )
+            )
     }
 }
 

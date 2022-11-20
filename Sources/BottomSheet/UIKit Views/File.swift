@@ -1,8 +1,8 @@
 //
-//  UIKitWrapper.swift
-//  BottomSheetExample
+//  File.swift
+//  
 //
-//  Created by Wouter van de Kamp on 17/09/2022.
+//  Created by Wouter van de Kamp on 20/11/2022.
 //
 
 import Foundation
@@ -15,7 +15,7 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     private let scrollView = UIScrollView()
     private let hostingController = UIHostingController(rootView: AnyView(EmptyView()))
     
-    let detents: [PresentationDetent]
+    let detents: Set<PresentationDetent>
     let content: () -> Content
     
     func makeUIView(context: Context) -> some UIScrollView {
@@ -23,7 +23,7 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         
         scrollView.addSubview(hostingController.view)
         
-        scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.contentInsetAdjustmentBehavior = .automatic
         scrollView.delegate = context.coordinator
         
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -56,8 +56,8 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         
         private var representable: UIScrollViewWrapper
         
-        private var minDetentLimit: CGFloat
-        private var maxDetentLimit: CGFloat
+        private var bottomOffset: CGFloat
+        private var topOffset: CGFloat
         
         
         init(_ representable: UIScrollViewWrapper) {
@@ -65,13 +65,12 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             
             let limits = detentLimits(detents: representable.detents)
             
-            self.minDetentLimit = limits.min
-            self.maxDetentLimit = limits.max
+            self.bottomOffset = limits.min
+            self.topOffset = limits.max
         }
         
         private func shouldDragSheet(_ scrollViewPosition: CGFloat) -> Bool {
-            // If view is over the max detent, and scroll view position increases, start scrolling
-            if representable.translation >= minDetentLimit {
+            if representable.translation >= bottomOffset {
                 return scrollViewPosition <= 0
             }
 
@@ -79,17 +78,13 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         }
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            // TODO: Delegates do not get triggered when contentSize smaller than the detent.
-            // So this if check doesn't make any sense.
-            if scrollView.contentSize.height > maxDetentLimit {
-                guard scrollView.isTracking else { return }
-                guard shouldDragSheet(scrollView.contentOffset.y) else { return }
-            }
+            guard scrollView.isTracking else { return }
+            guard shouldDragSheet(scrollView.contentOffset.y) else { return }
 
             let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y
             let translationDelta = translation - newValue
 
-            representable.translation -= translationDelta
+            representable.translation += translationDelta
 
             newValue = translation
 
@@ -101,15 +96,13 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             withVelocity velocity: CGPoint,
             targetContentOffset: UnsafeMutablePointer<CGPoint>
         ) {
-            snapBottomSheet(representable.detents, velocity.y)
+//            representable.translation = snapBottomSheet(
+//                representable.translation,
+//                representable.detents,
+//                velocity.y
+//            )
             
             newValue = 0
-        }
-        
-        func snapBottomSheet(_ detents: [PresentationDetent], _ yVelocity: CGFloat) {
-            detents.forEach { detent in
-                print(detent.size, representable.translation)
-            }
         }
     }
 }
