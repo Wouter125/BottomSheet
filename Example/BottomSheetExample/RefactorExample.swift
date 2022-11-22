@@ -44,7 +44,7 @@ struct RefactorExample: View {
                         }
                     }
                     .presentationDetentsPlus(
-                        [.medium, .large],
+                        [.small, .medium, .large],
                         selection: $selectedDetent
                     )
                 }
