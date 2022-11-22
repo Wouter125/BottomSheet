@@ -13,9 +13,8 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
     @State private var startTime: DragGesture.Value?
     
     @State private var detents: Set<PresentationDetent> = []
-    @State private var test = 0
-    
     @State private var preferenceKey: SheetPlusPreferenceKey?
+    @State private var limits: (min: CGFloat, max: CGFloat) = (min: 0, max: 0)
     
     public init(
         isPresented: Binding<Bool>,
@@ -35,9 +34,6 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
             
             if isPresented {
                 GeometryReader { geometry in
-                    let minimumLimit = detentLimits(detents: detents).min
-                    let maximumLimit = detentLimits(detents: detents).max
-                    
                     VStack(spacing: 0) {
                         Spacer()
                         
@@ -74,7 +70,9 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
                             
                                 UIScrollViewWrapper(
                                     translation: $translation,
-                                    detents: detents
+                                    preferenceKey: $preferenceKey,
+                                    detents: $detents,
+                                    limits: $limits
                                 ) {
                                     VStack {
                                         mcontent
@@ -82,11 +80,11 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
                                     }
                                 }
                         }
-                        .frame(height: maximumLimit)
-                        .offset(y: maximumLimit - translation)
+                        .frame(height: limits.max)
+                        .offset(y: limits.max - translation)
                         .onChange(of: translation) { newValue in
-                            if maximumLimit == 0 { return }
-                            translation = min(maximumLimit, max(newValue, minimumLimit))
+                            if limits.max == 0 { return }
+                            translation = min(limits.max, max(newValue, limits.min))
                         }
                         .onDisappear {
                             onDismiss()
@@ -98,6 +96,7 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
         }
         .onPreferenceChange(SheetPlusConfiguration.self) { value in
             detents = value.detents
+            limits = detentLimits(detents: detents)
             translation = value.$selection.wrappedValue.size
             
             self.preferenceKey = value

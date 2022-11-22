@@ -11,11 +11,13 @@ import UIKit
 
 struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     @Binding var translation: CGFloat
+    @Binding var preferenceKey: SheetPlusPreferenceKey?
+    @Binding var detents: Set<PresentationDetent>
+    @Binding var limits: (min: CGFloat, max: CGFloat)
     
     private let scrollView = UIScrollView()
     private let hostingController = UIHostingController(rootView: AnyView(EmptyView()))
     
-    let detents: Set<PresentationDetent>
     let content: () -> Content
     
     func makeUIView(context: Context) -> some UIScrollView {
@@ -56,22 +58,17 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         
         private var representable: UIScrollViewWrapper
         
-        private var bottomOffset: CGFloat
-        private var topOffset: CGFloat
-        
-        
         init(_ representable: UIScrollViewWrapper) {
             self.representable = representable
-            
-            let limits = detentLimits(detents: representable.detents)
-            
-            self.bottomOffset = limits.min
-            self.topOffset = limits.max
         }
         
         private func shouldDragSheet(_ scrollViewPosition: CGFloat) -> Bool {
-            if representable.translation >= bottomOffset {
-                return scrollViewPosition <= 0
+            if representable.translation >= representable.limits.max {
+                if scrollViewPosition > scrollOffset {
+                    scrollOffset = scrollViewPosition
+                }
+
+                return scrollViewPosition < 0
             }
 
             return true
@@ -81,10 +78,10 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             guard scrollView.isTracking else { return }
             guard shouldDragSheet(scrollView.contentOffset.y) else { return }
 
-            let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y
+            let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y - scrollOffset
             let translationDelta = translation - newValue
 
-            representable.translation += translationDelta
+            representable.translation -= translationDelta
 
             newValue = translation
 
@@ -96,12 +93,20 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             withVelocity velocity: CGPoint,
             targetContentOffset: UnsafeMutablePointer<CGPoint>
         ) {
-//            representable.translation = snapBottomSheet(
-//                representable.translation,
-//                representable.detents,
-//                velocity.y
-//            )
+            if representable.translation != representable.limits.max {
+                targetContentOffset.pointee = .zero
+            }
             
+            if let result = snapBottomSheet(
+                representable.translation,
+                representable.detents,
+                velocity.y
+            ) {
+                representable.translation = result.size
+                representable.preferenceKey?.$selection.wrappedValue = result
+            }
+            
+            scrollOffset = 0
             newValue = 0
         }
     }
