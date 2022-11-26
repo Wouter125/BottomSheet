@@ -13,7 +13,7 @@ struct SheetPlusPreferenceKey: Equatable {
     
     init(
         detents: Set<PresentationDetent>,
-        selection: Binding<PresentationDetent> = .constant(.height(-10))
+        selection: Binding<PresentationDetent> = .constant(.height(.zero))
     ) {
         self.detents = detents
         self._selection = selection

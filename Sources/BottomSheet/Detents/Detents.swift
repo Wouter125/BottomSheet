@@ -13,14 +13,7 @@ public enum PresentationDetent: Hashable {
     case large
     case fraction(CGFloat)
     case height(CGFloat)
-    
-    //TODO: implement solid hasher on values
-    public func hash(into hasher: inout Hasher) {}
-    
-    public static func == (lhs: PresentationDetent, rhs: PresentationDetent) -> Bool {
-        return lhs.size == rhs.size
-    }
-    
+
     public var size: CGFloat {
         switch self {
         case .small:
