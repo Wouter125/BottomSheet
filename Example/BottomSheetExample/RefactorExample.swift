@@ -22,9 +22,6 @@ struct RefactorExample: View {
         }
             .sheetPlus(
                 isPresented: $isPresented,
-                onDismiss: {
-                  print("hallo")
-                },
                 header: {
                     HStack {
                         Text("Header")

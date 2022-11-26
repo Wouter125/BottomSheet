@@ -100,7 +100,7 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             if let result = snapBottomSheet(
                 representable.translation,
                 representable.detents,
-                velocity.y
+                scrollView.contentOffset.y > 0 ? 0 : velocity.y
             ) {
                 representable.translation = result.size
                 representable.preferenceKey?.$selection.wrappedValue = result
