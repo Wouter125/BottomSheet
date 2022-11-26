@@ -22,7 +22,7 @@ func snapBottomSheet(_ translation: CGFloat, _ detents: Set<PresentationDetent>,
                 lower: detents[idx],
                 middle: detents[idx].size + ((detents[idx + 1].size - detents[idx].size) / 2),
                 upper: detents[idx + 1]
-            )
+            )            
             
             if detentBracket.lower.size...detentBracket.upper.size ~= translation {
                 if abs(yVelocity) > 1.8 {

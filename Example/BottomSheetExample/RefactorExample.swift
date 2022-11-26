@@ -41,7 +41,7 @@ struct RefactorExample: View {
                         }
                     }
                     .presentationDetentsPlus(
-                        [.small, .medium, .large],
+                        [.fraction(0.3), .fraction(0.5), .fraction(1)],
                         selection: $selectedDetent
                     )
                 }

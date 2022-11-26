@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-private struct ScreenSize {
+struct ScreenSize {
     static let topInset = UIApplication.shared.windows.first!.safeAreaInsets.top
 }
 
