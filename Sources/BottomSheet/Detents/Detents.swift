@@ -28,7 +28,7 @@ public enum PresentationDetent: Hashable {
                 UIScreen.main.bounds.height - ScreenSize.topInset
             )
         case .height(let height):
-            return max(
+            return min(
                 height,
                 UIScreen.main.bounds.height - ScreenSize.topInset
             )
