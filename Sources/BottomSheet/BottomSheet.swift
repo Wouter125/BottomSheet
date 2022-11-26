@@ -6,6 +6,7 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
     let onDismiss: () -> Void
     let hcontent: HContent
     let mcontent: MContent
+    let animationCurve: SheetAnimation
     
     @State private var offset = 0.0
     @State private var newValue = 0.0
@@ -22,12 +23,16 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
     
     public init(
         isPresented: Binding<Bool>,
+        animationCurve: SheetAnimation,
         onDismiss: @escaping () -> Void,
         @ViewBuilder hcontent: () -> HContent,
         @ViewBuilder mcontent: () -> MContent
     ) {
         self._isPresented = isPresented
+        
+        self.animationCurve = animationCurve
         self.onDismiss = onDismiss
+        
         self.hcontent = hcontent()
         self.mcontent = mcontent()
     }
@@ -93,7 +98,13 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
                         .onAnimationChange(of: translation) { value in
                             translationKey?.$translation.wrappedValue = value
                         }
-                        .animation(.easeInOut)
+                        .animation(
+                            .interpolatingSpring(
+                                mass: animationCurve.mass,
+                                stiffness: animationCurve.stiffness,
+                                damping: animationCurve.damping
+                            )
+                        )
                         .onDisappear {
                             onDismiss()
                         }
