@@ -11,6 +11,7 @@ import BottomSheet
 struct RefactorExample: View {
     @State var selectedDetent: BottomSheet.PresentationDetent = .large
     @State var isPresented: Bool = false
+    @State var translation: CGFloat = BottomSheet.PresentationDetent.large.size
     
     var body: some View {
         VStack {
@@ -18,6 +19,7 @@ struct RefactorExample: View {
                 isPresented.toggle()
             })
             Text("\(selectedDetent.size)")
+            Text("\(translation)")
             Spacer()
         }
             .sheetPlus(
@@ -44,6 +46,7 @@ struct RefactorExample: View {
                         [.fraction(0.3), .fraction(0.5), .fraction(1)],
                         selection: $selectedDetent
                     )
+                    .onSheetDrag(translation: $translation)
                 }
             )
     }

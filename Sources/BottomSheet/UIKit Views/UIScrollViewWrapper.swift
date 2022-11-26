@@ -11,7 +11,7 @@ import UIKit
 
 struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     @Binding var translation: CGFloat
-    @Binding var preferenceKey: SheetPlusPreferenceKey?
+    @Binding var preferenceKey: SheetPlusConfigKey?
     @Binding var detents: Set<PresentationDetent>
     @Binding var limits: (min: CGFloat, max: CGFloat)
     

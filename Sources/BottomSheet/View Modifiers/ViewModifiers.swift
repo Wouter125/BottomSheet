@@ -30,7 +30,7 @@ extension View {
     ) -> some View {
         return self.preference(
             key: SheetPlusConfiguration.self,
-            value: SheetPlusPreferenceKey(
+            value: SheetPlusConfigKey(
                 detents: detents
             )
         )
@@ -42,9 +42,18 @@ extension View {
     ) -> some View {
         return self.preference(
             key: SheetPlusConfiguration.self,
-            value: SheetPlusPreferenceKey(
+            value: SheetPlusConfigKey(
                 detents: detents,
                 selection: selection
+            )
+        )
+    }
+    
+    public func onSheetDrag(translation: Binding<CGFloat>) -> some View {
+        return self.preference(
+            key: SheetPlusTranslation.self,
+            value: SheetPlusTranslationKey(
+                translation: translation
             )
         )
     }

@@ -21,7 +21,7 @@ func detentLimits(detents: Set<PresentationDetent>) -> (min: CGFloat, max: CGFlo
             case .large:
                 return PresentationDetentDefaults.large
             case .fraction(let fraction):
-                return (UIScreen.main.bounds.height - ScreenSize.topInset) * fraction
+                return (UIScreen.main.bounds.height - (ScreenSize.topInset ?? 0)) * fraction
             case .height(let height):
                 return height
             }
