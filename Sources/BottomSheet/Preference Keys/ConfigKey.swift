@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct SheetPlusPreferenceKey: Equatable {
-    @Binding var selection: PresentationDetent
+struct SheetPlusConfigKey: Equatable {
     let detents: Set<PresentationDetent>
+    
+    @Binding var selection: PresentationDetent
     
     init(
         detents: Set<PresentationDetent>,
@@ -19,15 +20,15 @@ struct SheetPlusPreferenceKey: Equatable {
         self._selection = selection
     }
     
-    static func == (lhs: SheetPlusPreferenceKey, rhs: SheetPlusPreferenceKey) -> Bool {
+    static func == (lhs: SheetPlusConfigKey, rhs: SheetPlusConfigKey) -> Bool {
         return lhs.selection == rhs.selection
     }
 }
 
 struct SheetPlusConfiguration: PreferenceKey {
-    static var defaultValue: SheetPlusPreferenceKey = SheetPlusPreferenceKey(detents: [])
+    static var defaultValue: SheetPlusConfigKey = SheetPlusConfigKey(detents: [])
     
-    static func reduce(value: inout SheetPlusPreferenceKey, nextValue: () -> SheetPlusPreferenceKey) {
+    static func reduce(value: inout SheetPlusConfigKey, nextValue: () -> SheetPlusConfigKey) {
         value = nextValue()
     }
 }

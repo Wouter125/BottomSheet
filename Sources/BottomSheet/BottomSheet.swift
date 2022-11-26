@@ -13,8 +13,12 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
     @State private var startTime: DragGesture.Value?
     
     @State private var detents: Set<PresentationDetent> = []
-    @State private var preferenceKey: SheetPlusPreferenceKey?
+    @State private var preferenceKey: SheetPlusConfigKey?
     @State private var limits: (min: CGFloat, max: CGFloat) = (min: 0, max: 0)
+    
+    @State private var translationKey: SheetPlusTranslationKey?
+    
+    var onDrag: ((_ position: CGFloat) -> Void)?
     
     public init(
         isPresented: Binding<Bool>,
@@ -86,6 +90,10 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
                             if limits.max == 0 { return }
                             translation = min(limits.max, max(newValue, limits.min))
                         }
+                        .onAnimationChange(of: translation) { value in
+                            translationKey?.$translation.wrappedValue = value
+                        }
+                        .animation(.easeInOut)
                         .onDisappear {
                             onDismiss()
                         }
@@ -93,6 +101,9 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
                     .edgesIgnoringSafeArea(.bottom)
                 }
             }
+        }
+        .onPreferenceChange(SheetPlusTranslation.self) { value in
+            self.translationKey = value
         }
         .onPreferenceChange(SheetPlusConfiguration.self) { value in
             detents = value.detents

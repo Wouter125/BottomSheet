@@ -24,13 +24,13 @@ public enum PresentationDetent: Hashable {
             return PresentationDetentDefaults.large
         case .fraction(let fraction):
             return min(
-                (UIScreen.main.bounds.height - ScreenSize.topInset) * fraction,
-                UIScreen.main.bounds.height - ScreenSize.topInset
+                (UIScreen.main.bounds.height - (ScreenSize.topInset ?? 0)) * fraction,
+                UIScreen.main.bounds.height - (ScreenSize.topInset ?? 0)
             )
         case .height(let height):
             return min(
                 height,
-                UIScreen.main.bounds.height - ScreenSize.topInset
+                UIScreen.main.bounds.height - (ScreenSize.topInset ?? 0)
             )
         }
     }
