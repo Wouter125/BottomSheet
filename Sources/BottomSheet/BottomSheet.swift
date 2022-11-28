@@ -92,7 +92,7 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                                 }
                             }
                         }
-                        .background(Color.red)
+                        .background(background)
                         .frame(height: (limits.max - geometry.safeAreaInsets.top) > 0 ? limits.max - geometry.safeAreaInsets.top : limits.max)
                         .offset(y: limits.max - translation)
                         .onChange(of: translation) { newValue in
