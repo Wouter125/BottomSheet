@@ -1,12 +1,13 @@
 import SwiftUI
 
-struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
+struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier {
     @Binding private var isPresented: Bool
     
     let onDismiss: () -> Void
     let hcontent: HContent
     let mcontent: MContent
     let animationCurve: SheetAnimation
+    let background: Background
     
     @State private var offset = 0.0
     @State private var newValue = 0.0
@@ -24,6 +25,7 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
     public init(
         isPresented: Binding<Bool>,
         animationCurve: SheetAnimation,
+        background: Background,
         onDismiss: @escaping () -> Void,
         @ViewBuilder hcontent: () -> HContent,
         @ViewBuilder mcontent: () -> MContent
@@ -31,6 +33,7 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
         self._isPresented = isPresented
         
         self.animationCurve = animationCurve
+        self.background = background
         self.onDismiss = onDismiss
         
         self.hcontent = hcontent()
@@ -77,19 +80,20 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
                                         }
                                 )
                             
-                                UIScrollViewWrapper(
-                                    translation: $translation,
-                                    preferenceKey: $preferenceKey,
-                                    detents: $detents,
-                                    limits: $limits
-                                ) {
-                                    VStack {
-                                        mcontent
-                                            .frame(width: geometry.size.width)
-                                    }
+                            UIScrollViewWrapper(
+                                translation: $translation,
+                                preferenceKey: $preferenceKey,
+                                detents: $detents,
+                                limits: $limits
+                            ) {
+                                VStack {
+                                    mcontent
+                                        .frame(width: geometry.size.width)
                                 }
+                            }
                         }
-                        .frame(height: limits.max)
+                        .background(Color.red)
+                        .frame(height: (limits.max - geometry.safeAreaInsets.top) > 0 ? limits.max - geometry.safeAreaInsets.top : limits.max)
                         .offset(y: limits.max - translation)
                         .onChange(of: translation) { newValue in
                             if limits.max == 0 { return }
@@ -109,7 +113,7 @@ struct SheetPlus<HContent: View, MContent: View>: ViewModifier {
                             onDismiss()
                         }
                     }
-                    .edgesIgnoringSafeArea(.bottom)
+                    .edgesIgnoringSafeArea([.bottom])
                 }
             }
         }

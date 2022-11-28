@@ -7,12 +7,8 @@
 
 import SwiftUI
 
-struct ScreenSize {
-    static let topInset = UIApplication.shared.windows.first?.safeAreaInsets.top
-}
-
 struct PresentationDetentDefaults {
-    static let small: CGFloat = ((UIScreen.main.bounds.height - (ScreenSize.topInset ?? 0)) / 10) * 2
-    static let medium: CGFloat = ((UIScreen.main.bounds.height - (ScreenSize.topInset ?? 0)) / 10) * 5
-    static let large: CGFloat = (UIScreen.main.bounds.height - (ScreenSize.topInset ?? 0))
+    static let small: CGFloat = UIScreen.main.bounds.height * 0.2
+    static let medium: CGFloat = UIScreen.main.bounds.height * 0.5
+    static let large: CGFloat = UIScreen.main.bounds.height * 0.9
 }
