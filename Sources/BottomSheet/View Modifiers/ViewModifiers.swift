@@ -9,13 +9,14 @@ import SwiftUI
 
 // MARK: - View extensions
 extension View {
-    public func sheetPlus<HContent: View, MContent: View>(
+    public func sheetPlus<HContent: View, MContent: View, Background: View>(
         isPresented: Binding<Bool>,
         animationCurve: SheetAnimation = SheetAnimation(
             mass: SheetAnimationDefaults.mass,
             stiffness: SheetAnimationDefaults.stiffness,
             damping: SheetAnimationDefaults.damping
         ),
+        background: Background = Color(UIColor.systemBackground),
         onDismiss: @escaping () -> Void = {},
         header: () -> HContent,
         main: () -> MContent
@@ -24,6 +25,7 @@ extension View {
             SheetPlus(
                 isPresented: isPresented,
                 animationCurve: animationCurve,
+                background: background,
                 onDismiss: onDismiss,
                 hcontent: header,
                 mcontent: main

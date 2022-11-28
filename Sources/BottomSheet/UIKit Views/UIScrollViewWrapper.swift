@@ -37,7 +37,7 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             hostingController.view.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
         
-        hostingController.view.backgroundColor = .orange
+        hostingController.view.backgroundColor = .clear
 
         scrollView.layoutIfNeeded()
         

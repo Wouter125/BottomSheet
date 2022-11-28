@@ -9,7 +9,7 @@ import SwiftUI
 import BottomSheet
 
 struct RefactorExample: View {
-    @State var selectedDetent: BottomSheet.PresentationDetent = .large
+    @State var selectedDetent: BottomSheet.PresentationDetent = .medium
     @State var isPresented: Bool = false
     @State var translation: CGFloat = BottomSheet.PresentationDetent.large.size
     
@@ -24,13 +24,13 @@ struct RefactorExample: View {
         }
             .sheetPlus(
                 isPresented: $isPresented,
+                background: Color.red,
                 header: {
                     HStack {
                         Text("Header")
                         Spacer()
                     }
                     .frame(height: 48)
-                    .background(Color.orange)
                 },
                 main: {
                     VStack(spacing: 0) {
@@ -43,7 +43,7 @@ struct RefactorExample: View {
                         }
                     }
                     .presentationDetentsPlus(
-                        [.fraction(0.3), .fraction(0.5), .fraction(1)],
+                        [.fraction(0.3), .fraction(0.5), .fraction(0.9)],
                         selection: $selectedDetent
                     )
                     .onSheetDrag(translation: $translation)
