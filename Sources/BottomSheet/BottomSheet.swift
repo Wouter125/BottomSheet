@@ -51,6 +51,7 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                         
                         VStack(spacing: 0) {
                             hcontent
+                                .contentShape(Rectangle())
                                 .gesture(
                                     DragGesture(coordinateSpace: .global)
                                         .onChanged { value in
@@ -94,7 +95,7 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                         }
                         .background(background)
                         .frame(height: (limits.max - geometry.safeAreaInsets.top) > 0 ? limits.max - geometry.safeAreaInsets.top : limits.max)
-                        .offset(y: limits.max - translation)
+                        .offset(y: limits.max - translation - 155)
                         .onChange(of: translation) { newValue in
                             if limits.max == 0 { return }
                             translation = min(limits.max, max(newValue, limits.min))
