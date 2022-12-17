@@ -26,6 +26,7 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         scrollView.addSubview(hostingController.view)
         
         scrollView.contentInsetAdjustmentBehavior = .automatic
+        scrollView.alwaysBounceVertical = true
         scrollView.delegate = context.coordinator
         
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +46,6 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        
     }
     
     func makeCoordinator() -> Coordinator {

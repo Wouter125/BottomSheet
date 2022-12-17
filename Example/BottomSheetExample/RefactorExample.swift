@@ -12,7 +12,7 @@ struct RefactorExample: View {
     @State var selectedDetent: BottomSheet.PresentationDetent = .medium
     @State var isPresented: Bool = false
     @State var translation: CGFloat = BottomSheet.PresentationDetent.large.size
-    
+
     var body: some View {
         VStack {
             Button("Test", action: {
@@ -34,7 +34,7 @@ struct RefactorExample: View {
                 },
                 main: {
                     VStack(spacing: 0) {
-                        ForEach(0..<100, id: \.self) { obj in
+                        ForEach(0..<20, id: \.self) { obj in
                             HStack {
                                 Spacer()
                                 Text("\(obj)")
