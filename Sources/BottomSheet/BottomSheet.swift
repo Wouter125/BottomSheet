@@ -94,8 +94,12 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                             }
                         }
                         .background(background)
-                        .frame(height: (limits.max - geometry.safeAreaInsets.top) > 0 ? limits.max - geometry.safeAreaInsets.top : limits.max)
-                        .offset(y: limits.max - translation - 155)
+                        .frame(height:
+                                (limits.max - geometry.safeAreaInsets.top) > 0
+                                    ? limits.max - geometry.safeAreaInsets.top
+                                    : limits.max
+                        )
+                        .offset(y: limits.max - translation)
                         .onChange(of: translation) { newValue in
                             if limits.max == 0 { return }
                             translation = min(limits.max, max(newValue, limits.min))

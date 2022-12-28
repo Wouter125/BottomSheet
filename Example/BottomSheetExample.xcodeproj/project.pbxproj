@@ -14,7 +14,7 @@
 		6C763147283D774500463709 /* ExampleOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C763146283D774500463709 /* ExampleOverview.swift */; };
 		6C7F2F0A28CCE17A0070CBC2 /* RefactorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7F2F0928CCE17A0070CBC2 /* RefactorExample.swift */; };
 		6CDF5A0D27ED33C7004609F4 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDF5A0C27ED33C7004609F4 /* CornerRadius.swift */; };
-		6CF78515293D36FB000E6581 /* Stocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF78514293D36FB000E6581 /* Stocks.swift */; };
+		6CF78515293D36FB000E6581 /* StocksExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF78514293D36FB000E6581 /* StocksExample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,7 +26,7 @@
 		6C763146283D774500463709 /* ExampleOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleOverview.swift; sourceTree = "<group>"; };
 		6C7F2F0928CCE17A0070CBC2 /* RefactorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefactorExample.swift; sourceTree = "<group>"; };
 		6CDF5A0C27ED33C7004609F4 /* CornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRadius.swift; sourceTree = "<group>"; };
-		6CF78514293D36FB000E6581 /* Stocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stocks.swift; sourceTree = "<group>"; };
+		6CF78514293D36FB000E6581 /* StocksExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksExample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +99,7 @@
 		6CF78516293D3703000E6581 /* Apple Applications */ = {
 			isa = PBXGroup;
 			children = (
-				6CF78514293D36FB000E6581 /* Stocks.swift */,
+				6CF78514293D36FB000E6581 /* StocksExample.swift */,
 			);
 			path = "Apple Applications";
 			sourceTree = "<group>";
@@ -206,7 +206,7 @@
 				6C7F2F0A28CCE17A0070CBC2 /* RefactorExample.swift in Sources */,
 				6CDF5A0D27ED33C7004609F4 /* CornerRadius.swift in Sources */,
 				6C763147283D774500463709 /* ExampleOverview.swift in Sources */,
-				6CF78515293D36FB000E6581 /* Stocks.swift in Sources */,
+				6CF78515293D36FB000E6581 /* StocksExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
