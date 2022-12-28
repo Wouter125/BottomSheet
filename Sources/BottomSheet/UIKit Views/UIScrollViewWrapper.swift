@@ -39,6 +39,7 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         ])
         
         hostingController.view.backgroundColor = .clear
+        scrollView.backgroundColor = .clear
 
         scrollView.layoutIfNeeded()
         
