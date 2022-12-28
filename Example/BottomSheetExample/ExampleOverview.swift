@@ -17,10 +17,9 @@ class SheetSettings: ObservableObject {
 struct ExampleOverview: View {
     @StateObject var settings = SheetSettings()
 
-    var items = ["Stocks Examples"]
+    var items = ["Stocks example"]
     var views: [AnyView] = [
         AnyView(StocksExample())
-//        AnyView(MapsExampleView()),
     ]
 
     var body: some View {

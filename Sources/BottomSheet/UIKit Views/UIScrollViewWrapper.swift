@@ -77,7 +77,10 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
             guard scrollView.isTracking else { return }
-            guard shouldDragSheet(scrollView.contentOffset.y) else { return }
+            guard shouldDragSheet(scrollView.contentOffset.y) else {
+                scrollView.showsVerticalScrollIndicator = true
+                return
+            }
 
             let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y - scrollOffset
             let translationDelta = translation - newValue
@@ -85,7 +88,8 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             representable.translation -= translationDelta
 
             newValue = translation
-
+            
+            scrollView.showsVerticalScrollIndicator = false
             scrollView.contentOffset.y = .zero
         }
         
