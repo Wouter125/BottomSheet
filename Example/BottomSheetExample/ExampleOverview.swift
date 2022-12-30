@@ -8,8 +8,15 @@
 import SwiftUI
 import BottomSheet
 
+enum SheetExampleTypes {
+    case home
+    case stocks
+    case maps
+}
+
 class SheetSettings: ObservableObject {
     @Published var isPresented = false
+    @Published var activeSheetType: SheetExampleTypes = .home
     @Published var selectedDetent: BottomSheet.PresentationDetent = .medium
     @Published var translation: CGFloat = BottomSheet.PresentationDetent.large.size
 }
@@ -17,17 +24,51 @@ class SheetSettings: ObservableObject {
 struct ExampleOverview: View {
     @StateObject var settings = SheetSettings()
 
-    var items = ["Stocks example"]
-    var views: [AnyView] = [
-        AnyView(StocksExample())
+    var views: [(label: String, view: AnyView)] = [
+        (label: "Stocks example", view: AnyView(StocksExample())),
+        (label: "Maps example", view: AnyView(MapsExample()))
     ]
+
+    func headerContent() -> some View {
+        switch settings.activeSheetType {
+        case .stocks:
+            return AnyView(StocksHeader())
+        case .maps:
+            return AnyView(MapsHeader().environmentObject(settings))
+        default:
+            return AnyView(EmptyView())
+        }
+    }
+
+    func mainContent() -> some View {
+        switch settings.activeSheetType {
+        case .stocks:
+            return AnyView(
+                StocksMainContent()
+                    .presentationDetentsPlus(
+                        [.height(244), .medium, .large],
+                        selection: $settings.selectedDetent
+                    )
+            )
+        case .maps:
+            return AnyView(
+                MapsMainContent()
+                    .presentationDetentsPlus(
+                        [.height(244), .medium, .large],
+                        selection: $settings.selectedDetent
+                    )
+            )
+        default:
+            return AnyView(EmptyView())
+        }
+    }
 
     var body: some View {
         ZStack {
             NavigationView {
-                List(items.indices, id: \.self) { idx in
-                    NavigationLink(destination: views[idx]) {
-                        Text(items[idx])
+                List(views.indices, id: \.self) { index in
+                    NavigationLink(destination: views[index].view) {
+                        Text(views[index].label)
                     }
                 }
                 .background(Color(UIColor.systemGroupedBackground))
@@ -35,6 +76,8 @@ struct ExampleOverview: View {
                 .navigationTitle("Examples")
                 .onAppear {
                     settings.isPresented = false
+                    settings.activeSheetType = .home
+                    settings.selectedDetent = .medium
                 }
             }
             .navigationViewStyle(.stack)
@@ -46,21 +89,17 @@ struct ExampleOverview: View {
                 Color(UIColor.secondarySystemBackground)
                     .cornerRadius(12, corners: [.topLeft, .topRight])
             ),
-            header: { StocksExample().sheetHeaderContent },
+            header: { headerContent() },
             main: {
-                StocksExample().sheetMainContent
-                    .presentationDetentsPlus(
-                        [.height(244), .medium, .large],
-                        selection: $settings.selectedDetent
-                    )
+                mainContent()
                     .onSheetDrag(translation: $settings.translation)
             }
         )
         .overlay(
             VStack(spacing: 0) {
                 Divider()
-                 .frame(height: 1)
-                 .background(Color(UIColor.systemGray6))
+                    .frame(height: 1)
+                    .background(Color(UIColor.systemGray6))
 
                 HStack {
                     Text("Yahoo Finance")
@@ -72,7 +111,11 @@ struct ExampleOverview: View {
             .background(
                 Color(UIColor.secondarySystemBackground)
                     .edgesIgnoringSafeArea([.bottom])
-            ),
+            )
+            .opacity(
+                settings.activeSheetType == .stocks ? 1 : 0
+            )
+            ,
             alignment: .bottom
         )
     }

@@ -10,6 +10,7 @@
 		6C0BD46D27DA862D000AF3CD /* BottomSheetExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0BD46C27DA862D000AF3CD /* BottomSheetExampleApp.swift */; };
 		6C0BD47127DA862D000AF3CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47027DA862D000AF3CD /* Assets.xcassets */; };
 		6C0BD47427DA862D000AF3CD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47327DA862D000AF3CD /* Preview Assets.xcassets */; };
+		6C658CDF295CE882003F8345 /* MapsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C658CDE295CE882003F8345 /* MapsExample.swift */; };
 		6C6EB0B6292AEADC00106A1D /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 6C6EB0B5292AEADC00106A1D /* BottomSheet */; };
 		6C763147283D774500463709 /* ExampleOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C763146283D774500463709 /* ExampleOverview.swift */; };
 		6CDF5A0D27ED33C7004609F4 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDF5A0C27ED33C7004609F4 /* CornerRadius.swift */; };
@@ -22,6 +23,7 @@
 		6C0BD47027DA862D000AF3CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6C0BD47327DA862D000AF3CD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6C1DE0102889CF10003C6EE9 /* BottomSheet */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = BottomSheet; path = ..; sourceTree = "<group>"; };
+		6C658CDE295CE882003F8345 /* MapsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsExample.swift; sourceTree = "<group>"; };
 		6C763146283D774500463709 /* ExampleOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleOverview.swift; sourceTree = "<group>"; };
 		6CDF5A0C27ED33C7004609F4 /* CornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRadius.swift; sourceTree = "<group>"; };
 		6CF78514293D36FB000E6581 /* StocksExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksExample.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				6CF78514293D36FB000E6581 /* StocksExample.swift */,
+				6C658CDE295CE882003F8345 /* MapsExample.swift */,
 			);
 			path = "Apple Applications";
 			sourceTree = "<group>";
@@ -201,6 +204,7 @@
 			files = (
 				6C0BD46D27DA862D000AF3CD /* BottomSheetExampleApp.swift in Sources */,
 				6CDF5A0D27ED33C7004609F4 /* CornerRadius.swift in Sources */,
+				6C658CDF295CE882003F8345 /* MapsExample.swift in Sources */,
 				6C763147283D774500463709 /* ExampleOverview.swift in Sources */,
 				6CF78515293D36FB000E6581 /* StocksExample.swift in Sources */,
 			);

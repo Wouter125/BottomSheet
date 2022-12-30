@@ -10,17 +10,20 @@ import BottomSheet
 
 struct StocksExample: View {
     @EnvironmentObject var settings: SheetSettings
-
+    
     var body: some View {
         Color.clear
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("\(settings.translation.rounded())")
             .onAppear {
                 settings.isPresented = true
+                settings.activeSheetType = .stocks
             }
     }
+}
 
-    var sheetHeaderContent: some View {
+struct StocksHeader: View {
+    var body: some View {
         VStack {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
@@ -43,8 +46,10 @@ struct StocksExample: View {
         .padding(.top, 8)
         .padding(.horizontal, 16)
     }
+}
 
-    var sheetMainContent: some View {
+struct StocksMainContent: View {
+    var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 ForEach(0..<5, id: \.self) { _ in
