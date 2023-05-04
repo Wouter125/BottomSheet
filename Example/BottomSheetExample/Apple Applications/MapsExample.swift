@@ -49,13 +49,12 @@ struct MapsHeader: View {
 }
 
 struct MapsMainContent: View {
-    var body: some View {
-        ScrollView {
-            ForEach(0..<5, id: \.self) { _ in
-                Text("Hallo")
-            }
-        }
+    @State var isInitial = true
 
+    var body: some View {
+        List(0..<35) { idx in
+            Text("Item \(idx)")
+        }
     }
 }
 

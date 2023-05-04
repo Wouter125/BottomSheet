@@ -14,13 +14,14 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     @Binding var preferenceKey: SheetPlusConfigKey?
     @Binding var detents: Set<PresentationDetent>
     @Binding var limits: (min: CGFloat, max: CGFloat)
+    @Binding var listSize: CGSize?
     
     private let scrollView = UIScrollView()
     private let hostingController = UIHostingController(rootView: AnyView(EmptyView()))
     
     let content: () -> Content
     
-    func makeUIView(context: Context) -> some UIScrollView {
+    func makeUIView(context: Context) -> UIScrollView {
         hostingController.rootView = AnyView(self.content())
         
         scrollView.addSubview(hostingController.view)
@@ -46,7 +47,21 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         return scrollView
     }
     
-    func updateUIView(_ uiView: UIViewType, context: Context) {
+    func updateUIView(_ scrollView: UIScrollView, context: Context) {
+        // Hack to implement a custom scrollsize, so lists gets rendered.
+        // Apart from that we disable the list height
+        if let listSize = listSize {
+            let listViews = scrollView.findViews(subclassOf: UICollectionView.self)
+            
+            if listViews.count > 0 {
+                listViews[0].contentSize = CGSize(width: listSize.width, height: listSize.height)
+                listViews[0].frame = CGRect(x: 0, y: 0, width: listSize.width, height: listSize.height)
+                listViews[0].isScrollEnabled = false
+            }
+            
+            scrollView.contentSize = listSize
+        }
+        
     }
     
     func makeCoordinator() -> Coordinator {
