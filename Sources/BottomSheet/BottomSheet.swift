@@ -1,162 +1,136 @@
 import SwiftUI
 
-// swiftlint:disable line_length
-public struct BottomSheetView<Header: View, Content: View, PositionEnum: RawRepresentable>: View where PositionEnum.RawValue == CGFloat, PositionEnum: CaseIterable, PositionEnum: Equatable {
-    @State private var bottomSheetTranslation: CGFloat
-    @State private var initialVelocity: Double = 0.0
-    @State private var shouldAnimate: Bool = false
- 
-    @Binding var position: PositionEnum
-
-    let header: Header
-    let content: Content
-    let frameHeight: CGFloat
+struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier {
+    @Binding private var isPresented: Bool
     
-    private var AnimationModel: BottomSheet.AnimationModel = BottomSheet.AnimationModel(
-        mass: BottomSheetDefaults.Animation.mass,
-        stiffness: BottomSheetDefaults.Animation.stiffness,
-        damping: BottomSheetDefaults.Animation.damping
-    )
+    let onDismiss: () -> Void
+    let hcontent: HContent
+    let mcontent: MContent
+    let animationCurve: SheetAnimation
+    let background: Background
     
-    private var threshold = BottomSheetDefaults.Interaction.threshold
-    private var excludedPositions: [PositionEnum] = []
-    private var isDraggable = true
-
-    private var onBottomSheetDrag: ((_ position: CGFloat) -> Void)?
-
+    @State private var offset = 0.0
+    @State private var newValue = 0.0
+    @State private var translation: CGFloat = 0
+    @State private var startTime: DragGesture.Value?
+    
+    @State private var detents: Set<PresentationDetent> = []
+    @State private var preferenceKey: SheetPlusConfigKey?
+    @State private var limits: (min: CGFloat, max: CGFloat) = (min: 0, max: 0)
+    
+    @State private var translationKey: SheetPlusTranslationKey?
+    
+    var onDrag: ((_ position: CGFloat) -> Void)?
+    
     public init(
-        position: Binding<PositionEnum>,
-        @ViewBuilder header: () -> Header,
-        @ViewBuilder content: () -> Content
+        isPresented: Binding<Bool>,
+        animationCurve: SheetAnimation,
+        background: Background,
+        onDismiss: @escaping () -> Void,
+        @ViewBuilder hcontent: () -> HContent,
+        @ViewBuilder mcontent: () -> MContent
     ) {
-        let lastPosition = PositionEnum.allCases.sorted(by: { $0.rawValue < $1.rawValue }).last!.rawValue
+        self._isPresented = isPresented
         
-        if lastPosition <= 1 {
-            PositionModel.type = .relative
-            
-            self._bottomSheetTranslation = State(initialValue: position.wrappedValue.rawValue * UIScreen.main.bounds.height)
-            self.frameHeight = lastPosition * UIScreen.main.bounds.height
-        } else {
-            PositionModel.type = .absolute
-            
-            self._bottomSheetTranslation = State(initialValue: position.wrappedValue.rawValue)
-            self.frameHeight = lastPosition
-        }
+        self.animationCurve = animationCurve
+        self.background = background
+        self.onDismiss = onDismiss
         
-        self._position = position
-
-        self.header = header()
-        self.content = content()
+        self.hcontent = hcontent()
+        self.mcontent = mcontent()
     }
-
-    public var body: some View {
-        GeometryReader { geometry in
-            UIKitBottomSheetViewController(
-                bottomSheetTranslation: $bottomSheetTranslation,
-                initialVelocity: $initialVelocity,
-                bottomSheetPosition: $position,
-                isDraggable: isDraggable,
-                threshold: threshold,
-                excludedPositions: excludedPositions,
-                header: {
-                    VStack {
-                        header
-                            .zIndex(1)
+    
+    func body(content: Content) -> some View {
+        ZStack() {
+            content
+            
+            if isPresented {
+                GeometryReader { geometry in
+                    VStack(spacing: 0) {
+                        Spacer()
+                        
+                        VStack(spacing: 0) {
+                            hcontent
+                                .contentShape(Rectangle())
+                                .gesture(
+                                    DragGesture(coordinateSpace: .global)
+                                        .onChanged { value in
+                                            translation -= value.location.y - value.startLocation.y - newValue
+                                            newValue = value.location.y - value.startLocation.y
+                                            
+                                            if startTime == nil {
+                                                startTime = value
+                                            }
+                                        }
+                                        .onEnded { value in
+                                            // Reset the distance on release so we start with a
+                                            // clean translation next time
+                                            newValue = 0
+                                            
+                                            // Calculate velocity based on pt/s so it matches the UIPanGesture
+                                            let distance: CGFloat = value.translation.height
+                                            let time: CGFloat = value.time.timeIntervalSince(startTime!.time)
+                                            
+                                            let yVelocity: CGFloat = -1 * ((distance / time) / 1000)
+                                            startTime = nil
+                                            
+                                            if let result = snapBottomSheet(translation, detents, yVelocity) {
+                                                translation = result.size
+                                                preferenceKey?.$selection.wrappedValue = result
+                                            }
+                                        }
+                                )
+                            
+                            
+                            UIScrollViewWrapper(
+                                translation: $translation,
+                                preferenceKey: $preferenceKey,
+                                detents: $detents,
+                                limits: $limits
+                            ) {
+                                mcontent
+                                    .frame(width: geometry.size.width)
+                            }
+                            
+                        }
+                        .background(background)
+                        .frame(height:
+                                (limits.max - geometry.safeAreaInsets.top) > 0
+                                    ? limits.max - geometry.safeAreaInsets.top
+                                    : limits.max
+                        )
+                        .offset(y: limits.max - translation)
+                        .onChange(of: translation) { newValue in
+                            if limits.max == 0 { return }
+                            translation = min(limits.max, max(newValue, limits.min))
+                        }
+                        .onAnimationChange(of: translation) { value in
+                            translationKey?.$translation.wrappedValue = value
+                        }
+                        .animation(
+                            .interpolatingSpring(
+                                mass: animationCurve.mass,
+                                stiffness: animationCurve.stiffness,
+                                damping: animationCurve.damping
+                            )
+                        )
+                        .onDisappear {
+                            onDismiss()
+                        }
                     }
-                },
-                content: {
-                    GeometryReader { _ in
-                        content
-                    }
-                }
-            )
-            .onAppear {
-                DispatchQueue.main.async {
-                    shouldAnimate = true
+                    .edgesIgnoringSafeArea([.bottom])
                 }
             }
-            .onChange(of: $position.wrappedValue) { newValue in
-                position = newValue
-                
-                if PositionModel.type == .relative {
-                    bottomSheetTranslation = newValue.rawValue * UIScreen.main.bounds.height
-                } else {
-                    bottomSheetTranslation = newValue.rawValue
-                }
-            }
-            .onAnimationChange(of: bottomSheetTranslation) { newValue in
-                onBottomSheetDrag?(newValue)
-                
-                
-            }
-            .frame(height: frameHeight)
-            .offset(y: (geometry.size.height + geometry.safeAreaInsets.bottom) - bottomSheetTranslation)
-            .animation(
-                !shouldAnimate ?
-                    .none :
-                    .interpolatingSpring(
-                        mass: AnimationModel.mass,
-                        stiffness: AnimationModel.stiffness,
-                        damping: AnimationModel.damping,
-                        initialVelocity: initialVelocity * 10
-                    ),
-                    value: geometry.size.height - (bottomSheetTranslation * geometry.size.height)
-            )
+        }
+        .onPreferenceChange(SheetPlusTranslation.self) { value in
+            self.translationKey = value
+        }
+        .onPreferenceChange(SheetPlusConfiguration.self) { value in
+            detents = value.detents
+            limits = detentLimits(detents: detents)
+            translation = value.$selection.wrappedValue.size
+            
+            self.preferenceKey = value
         }
     }
 }
-
-// MARK: - Properties
-extension BottomSheetView {
-    public func animationCurve(mass: Double = 1.2, stiffness: Double = 200, damping: Double = 25) -> BottomSheetView {
-        var bottomSheetView = self
-        bottomSheetView.AnimationModel = BottomSheet.AnimationModel(
-            mass: mass,
-            stiffness: stiffness,
-            damping: damping
-        )
-        return bottomSheetView
-    }
-    
-    public func snapThreshold(_ threshold: Double = 0) -> BottomSheetView {
-        var bottomSheetView = self
-        bottomSheetView.threshold = threshold
-        return bottomSheetView
-    }
-    
-    public func isDraggable(_ isDraggable: Bool) -> BottomSheetView {
-        var bottomSheetView = self
-        bottomSheetView.isDraggable = isDraggable
-        return bottomSheetView
-    }
-    
-    public func excludeSnapPositions(_ positions: [PositionEnum]) -> BottomSheetView {
-        var bottomSheetView = self
-        bottomSheetView.excludedPositions = positions
-        return bottomSheetView
-    }
-}
-
-// MARK: - Closures
-extension BottomSheetView {
-    public func onBottomSheetDrag(perform: @escaping (CGFloat) -> Void) -> BottomSheetView {
-        var bottomSheetView = self
-        bottomSheetView.onBottomSheetDrag = perform
-        return bottomSheetView
-    }
-}
-
-// MARK: - Convenience initializers
-extension BottomSheetView where Header == EmptyView {
-    init(
-        position: Binding<PositionEnum>,
-        @ViewBuilder content: () -> Content
-    ) {
-        self.init(
-            position: position,
-            header: { EmptyView() },
-            content: content
-        )
-    }
-}
-

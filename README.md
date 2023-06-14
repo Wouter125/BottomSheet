@@ -12,9 +12,6 @@ The library currently supports;
 - [x] Customizable animation parameters
 - [x] An optional sticky header
 - [x] Views with and without a scrollview
-- [x] Custom snap threshold
-- [x] Dynamically exclude snap positions
-- [x] Dynamically disable and enable dragging  
 
 ## How to install
 
@@ -28,54 +25,48 @@ Currently BottomSheet is only available through the [Swift Package Manager](http
 
 1. Import BottomSheet
 
-2. Create a custom enum with all snap positions. It can be relative or absolute. Order does not matter. Absolute positioning should look something like this;
+2. Create a state property that contains the presentation state of the bottom sheet and one for the current selection;
 
 ```
-enum BottomSheetPosition: CGFloat, CaseIterable {
-    case bottom = 182
-    case middle = 320
-    case top = 700
-}
+@Published var isPresented = false
+@Published var selectedDetent = .medium
 ```
 
-Relative positioning should always be between 0 and 1 and can look like this;
+4. Add the `BottomSheetView` to your SwiftUI view hierachy by using a view modifier;
 
 ```
-enum BottomSheetRelativePosition: CGFloat, CaseIterable {
-    case bottom = 0.216
-    case middle = 0.355
-    case top = 0.829
-}
+.sheetPlus(
+    isPresented: $isPresented,
+    header: { },
+    main: { 
+        EmptyView()
+            .presentationDetentsPlus(
+                [.height(244), .fraction(0.4), .medium, .large],
+                selection: $selectedDetent
+            )
+    }
+)
 ```
 
-3. Create a state property that contains the bottom sheet start position;
-
-```
-@State var position: BottomSheetPosition = .middle
-```
-
-4. Add the `BottomSheetView` to your SwiftUI view hierachy;
+5. Optionally receive the current panel position with a callback, set a custom background or change the animation curves;
 
 ```
 BottomSheetView(
     position: $position,
-    header: { }
-    content: { }
-}
-```
-
-5. Optionally tweak the animation curve / snap threshold with a view modifier or receive the current panel position with a callback;
-
-```
-BottomSheetView(
-    position: $position,
-    header: { }
-    content: { }
-}
-.animationCurve(mass: 1, stiffness: 250)
-.snapThreshold(1.8)
-.onBottomSheetDrag { translation in
-    print("Translation", translation)
+    animationCurve: SheetAnimation(
+        mass: 1,
+        stiffness: 250,
+        damping: 25
+    ),
+    background: (
+        Color(UIColor.secondarySystemBackground)
+            .cornerRadius(12, corners: [.topLeft, .topRight])
+    ),
+    header: { },
+    content: {
+        EmptyView()
+            .onSheetDrag(translation: $settings.translation)
+    }
 }
 ```
 
@@ -83,12 +74,9 @@ BottomSheetView(
 
 | Modifier                 | Type                | Default | Description                                                                       |
 |--------------------------|---------------------|---------|-----------------------------------------------------------------------------------|
-| snapThreshold            | Double              | 1.8     | The threshold to let the drag gesture ignore the distance. Value between 0 and 3. |
 | animationCurve.mass      | Double              | 1.2     | The mass of the object attached to the spring.                                    |
 | animationCurve.stiffness | Double              | 200     | The stiffness of the spring.                                                      |
 | animationCurve.damping   | Double              | 25      | The spring damping value.                                                         |
-| isDraggable              | Boolean             | true    | Whether you can drag the BottomSheet or not.                                      |
-| excludeSnapPositions     | Array<PositionEnum> | []      | An array that contains the enum positions that you want to exclude when snapping  |
 
 ## Example
 

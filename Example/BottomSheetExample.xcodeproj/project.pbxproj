@@ -7,23 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6C0B59F127DAB989006D979A /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 6C0B59F027DAB989006D979A /* BottomSheet */; };
 		6C0BD46D27DA862D000AF3CD /* BottomSheetExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0BD46C27DA862D000AF3CD /* BottomSheetExampleApp.swift */; };
-		6C0BD46F27DA862D000AF3CD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0BD46E27DA862D000AF3CD /* ContentView.swift */; };
 		6C0BD47127DA862D000AF3CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47027DA862D000AF3CD /* Assets.xcassets */; };
 		6C0BD47427DA862D000AF3CD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47327DA862D000AF3CD /* Preview Assets.xcassets */; };
+		6C6EB0B6292AEADC00106A1D /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 6C6EB0B5292AEADC00106A1D /* BottomSheet */; };
 		6C763147283D774500463709 /* ExampleOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C763146283D774500463709 /* ExampleOverview.swift */; };
 		6CDF5A0D27ED33C7004609F4 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDF5A0C27ED33C7004609F4 /* CornerRadius.swift */; };
+		6CF78515293D36FB000E6581 /* StocksExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF78514293D36FB000E6581 /* StocksExample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6C0BD46927DA862D000AF3CD /* BottomSheetExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BottomSheetExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C0BD46C27DA862D000AF3CD /* BottomSheetExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetExampleApp.swift; sourceTree = "<group>"; };
-		6C0BD46E27DA862D000AF3CD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6C0BD47027DA862D000AF3CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6C0BD47327DA862D000AF3CD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		6C1DE0102889CF10003C6EE9 /* BottomSheet */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = BottomSheet; path = ..; sourceTree = "<group>"; };
 		6C763146283D774500463709 /* ExampleOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleOverview.swift; sourceTree = "<group>"; };
 		6CDF5A0C27ED33C7004609F4 /* CornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRadius.swift; sourceTree = "<group>"; };
+		6CF78514293D36FB000E6581 /* StocksExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksExample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C0B59F127DAB989006D979A /* BottomSheet in Frameworks */,
+				6C6EB0B6292AEADC00106A1D /* BottomSheet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +42,7 @@
 		6C0BD46027DA862C000AF3CD = {
 			isa = PBXGroup;
 			children = (
+				6C1DE0102889CF10003C6EE9 /* BottomSheet */,
 				6C0BD46B27DA862D000AF3CD /* BottomSheetExample */,
 				6C0BD46A27DA862D000AF3CD /* Products */,
 				6C0BD47A27DA87A1000AF3CD /* Frameworks */,
@@ -60,7 +62,7 @@
 			children = (
 				6C0BD46C27DA862D000AF3CD /* BottomSheetExampleApp.swift */,
 				6C763146283D774500463709 /* ExampleOverview.swift */,
-				6C0BD46E27DA862D000AF3CD /* ContentView.swift */,
+				6CF78516293D3703000E6581 /* Apple Applications */,
 				6CDF5A0E27ED33D3004609F4 /* View Modifiers */,
 				6C0BD47027DA862D000AF3CD /* Assets.xcassets */,
 				6C0BD47227DA862D000AF3CD /* Preview Content */,
@@ -91,6 +93,14 @@
 			path = "View Modifiers";
 			sourceTree = "<group>";
 		};
+		6CF78516293D3703000E6581 /* Apple Applications */ = {
+			isa = PBXGroup;
+			children = (
+				6CF78514293D36FB000E6581 /* StocksExample.swift */,
+			);
+			path = "Apple Applications";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -100,6 +110,7 @@
 			buildPhases = (
 				6C0BD46527DA862D000AF3CD /* Sources */,
 				6C0BD46627DA862D000AF3CD /* Frameworks */,
+				6C939DBE294DFF9200F6EF50 /* Swiftlint */,
 				6C0BD46727DA862D000AF3CD /* Resources */,
 			);
 			buildRules = (
@@ -108,7 +119,7 @@
 			);
 			name = BottomSheetExample;
 			packageProductDependencies = (
-				6C0B59F027DAB989006D979A /* BottomSheet */,
+				6C6EB0B5292AEADC00106A1D /* BottomSheet */,
 			);
 			productName = BottomSheetExample;
 			productReference = 6C0BD46927DA862D000AF3CD /* BottomSheetExample.app */;
@@ -139,7 +150,6 @@
 			);
 			mainGroup = 6C0BD46027DA862C000AF3CD;
 			packageReferences = (
-				6C0B59EF27DAB989006D979A /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			productRefGroup = 6C0BD46A27DA862D000AF3CD /* Products */;
 			projectDirPath = "";
@@ -162,15 +172,37 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6C939DBE294DFF9200F6EF50 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6C0BD46527DA862D000AF3CD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C0BD46F27DA862D000AF3CD /* ContentView.swift in Sources */,
 				6C0BD46D27DA862D000AF3CD /* BottomSheetExampleApp.swift in Sources */,
 				6CDF5A0D27ED33C7004609F4 /* CornerRadius.swift in Sources */,
 				6C763147283D774500463709 /* ExampleOverview.swift in Sources */,
+				6CF78515293D36FB000E6581 /* StocksExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,17 +332,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"BottomSheetExample/Preview Content\"";
-				DEVELOPMENT_TEAM = JU6AZT44CN;
+				DEVELOPMENT_ASSET_PATHS = "BottomSheetExample/Preview\\ Content";
+				DEVELOPMENT_TEAM = KZAMEFAGHT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -320,7 +351,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -331,17 +362,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"BottomSheetExample/Preview Content\"";
-				DEVELOPMENT_TEAM = JU6AZT44CN;
+				DEVELOPMENT_ASSET_PATHS = "BottomSheetExample/Preview\\ Content";
+				DEVELOPMENT_TEAM = KZAMEFAGHT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -351,7 +381,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -378,21 +408,9 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		6C0B59EF27DAB989006D979A /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Wouter125/BottomSheet";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		6C0B59F027DAB989006D979A /* BottomSheet */ = {
+		6C6EB0B5292AEADC00106A1D /* BottomSheet */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6C0B59EF27DAB989006D979A /* XCRemoteSwiftPackageReference "BottomSheet" */;
 			productName = BottomSheet;
 		};
 /* End XCSwiftPackageProductDependency section */
