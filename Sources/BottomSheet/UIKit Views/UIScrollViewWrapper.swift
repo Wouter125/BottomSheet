@@ -51,16 +51,40 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         // Hack to implement a custom scrollsize, so lists gets rendered.
         // Apart from that we disable the list height
         if let listSize = listSize {
-            let listViews = scrollView.findViews(subclassOf: UICollectionView.self)
+            print(scrollView.subviews[0].subviews)
+            scrollView.contentSize = CGSize(width: listSize.width, height: listSize.height)
             
-            if listViews.count > 0 {
-                listViews[0].contentSize = CGSize(width: listSize.width, height: listSize.height)
-                listViews[0].frame = CGRect(x: 0, y: 0, width: listSize.width, height: listSize.height)
-                listViews[0].isScrollEnabled = false
-            }
-            
-            scrollView.contentSize = listSize
+            scrollView.layoutSubviews()
         }
+//            scrollView.subviews[0].frame = CGRect(x: 0, y: 0, width: 375, height: 1595)
+//            
+//            let test = scrollView.subviews[0].subviews
+//            
+//            test[test.count - 2].frame = CGRect(x: 0, y: 210, width: listSize.width, height: listSize.height)
+//            
+//            scrollView.subviews[0].layoutSubviews()
+//            scrollView.subviews[0].layoutIfNeeded()
+//            
+//            print(scrollView.subviews[0])
+//            
+//            print(scrollView.subviews[0].frame)
+//        }
+//
+//
+//
+//
+//            let listViews = scrollView.findViews(subclassOf: UICollectionView.self)
+//
+//            print(listViews)
+//
+//            if listViews.count > 0 {
+//                listViews[0].contentSize = CGSize(width: listSize.width, height: listSize.height)
+//                listViews[0].frame = CGRect(x: 0, y: 0, width: listSize.width, height: listSize.height)
+//                listViews[0].isScrollEnabled = false
+//            }
+//
+//            scrollView.contentSize = CGSize(width: listSize.width, height: listSize.height + scrollView.subviews[0].frame.height)
+//        }
         
     }
     

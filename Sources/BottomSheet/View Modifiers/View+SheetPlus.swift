@@ -65,4 +65,31 @@ extension View {
             )
         )
     }
+    
+    public func layoutBottomSheetList() -> some View {
+        modifier(LayoutBottomSheetList())
+    }
+}
+
+struct LayoutBottomSheetList: ViewModifier {
+    @State var size: CGSize? = nil
+    
+    func body(content: Content) -> some View {
+        if size == nil {
+            return AnyView(
+                content
+                    .introspect { view in
+                        size = view.contentSize
+                    }
+            )
+        } else {
+            return AnyView(
+                VStack {
+                    content
+                        .frame(width: size!.width, height: size!.height)
+                    Text("\(size!.height)")
+                }
+            )
+        }
+    }
 }

@@ -93,14 +93,14 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                                         }
                                 )
                             
-                            UIScrollViewWrapper(
-                                translation: $translation,
-                                preferenceKey: $preferenceKey,
-                                detents: $detents,
-                                limits: $limits,
-                                listSize: $listSize
-                            ) {
-                                VStack {
+                            if listSize != nil {
+                                UIScrollViewWrapper(
+                                    translation: $translation,
+                                    preferenceKey: $preferenceKey,
+                                    detents: $detents,
+                                    limits: $limits,
+                                    listSize: $listSize
+                                ) {
                                     mcontent
                                         .frame(width: geometry.size.width)
                                 }

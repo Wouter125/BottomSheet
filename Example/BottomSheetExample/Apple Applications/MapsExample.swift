@@ -52,9 +52,18 @@ struct MapsMainContent: View {
     @State var isInitial = true
 
     var body: some View {
+        VStack {
+            ForEach(0..<10) { idx in
+                Text("VStack 1 \(idx)")
+            }
+        }
+
         List(0..<35) { idx in
             Text("Item \(idx)")
         }
+        .layoutBottomSheetList()
+
+        Text("Hallo")
     }
 }
 

@@ -50,8 +50,6 @@ public struct UIKitIntrospectionView: UIViewRepresentable {
             // List is using a collection or tableview, where both of them are subclasses of scrollviews
             // That's why we look for scrollviews
             if let scrollViews = root?.findViews(subclassOf: UICollectionView.self) {
-                print(scrollViews)
-                
                 if scrollViews.count > 1 {
                     self.customize(scrollViews[1])
                 }
