@@ -2,6 +2,8 @@
 
 An iOS library for SwiftUI to create draggable sheet experiences similar to iOS applications like Maps and Stocks. 
 
+**Please note this is a pre-release of 2.0.0. Please use 1.4.5 if you want to run the latest stable version.**
+
 ## Feature overview 
 
 The library currently supports;
