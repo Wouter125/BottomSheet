@@ -31,7 +31,7 @@ Currently BottomSheet is only available through the [Swift Package Manager](http
 
 ```
 @Published var isPresented = false
-@Published var selectedDetent = .medium
+@Published var selectedDetent: BottomSheet.PresentationDetent = .medium
 ```
 
 4. Add the `BottomSheetView` to your SwiftUI view hierachy by using a view modifier;
