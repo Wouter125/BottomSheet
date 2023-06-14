@@ -20,8 +20,6 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
     
     @State private var translationKey: SheetPlusTranslationKey?
     
-    @State private var listSize: CGSize?
-    
     var onDrag: ((_ position: CGFloat) -> Void)?
     
     public init(
@@ -45,16 +43,6 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
     func body(content: Content) -> some View {
         ZStack() {
             content
-            
-            // Additional renderer to calculate the view size of the list at top level
-            if listSize == nil {
-                mcontent
-                    .opacity(0.01)
-                    .disabled(true)
-                    .introspect { view in
-                        listSize = view.contentSize
-                    }
-            }
             
             if isPresented {
                 GeometryReader { geometry in
@@ -93,18 +81,17 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                                         }
                                 )
                             
-                            if listSize != nil {
-                                UIScrollViewWrapper(
-                                    translation: $translation,
-                                    preferenceKey: $preferenceKey,
-                                    detents: $detents,
-                                    limits: $limits,
-                                    listSize: $listSize
-                                ) {
-                                    mcontent
-                                        .frame(width: geometry.size.width)
-                                }
+                            
+                            UIScrollViewWrapper(
+                                translation: $translation,
+                                preferenceKey: $preferenceKey,
+                                detents: $detents,
+                                limits: $limits
+                            ) {
+                                mcontent
+                                    .frame(width: geometry.size.width)
                             }
+                            
                         }
                         .background(background)
                         .frame(height:
@@ -128,7 +115,6 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                             )
                         )
                         .onDisappear {
-                            listSize = nil
                             onDismiss()
                         }
                     }
