@@ -62,7 +62,6 @@ BottomSheetView(
     ),
     background: (
         Color(UIColor.secondarySystemBackground)
-            .cornerRadius(12, corners: [.topLeft, .topRight])
     ),
     header: { },
     content: {
