@@ -113,6 +113,12 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                             )
                         )
                         .onDisappear {
+                            translation = 0
+                            detents = []
+                            offset = 0
+                            newValue = 0
+                            limits = (min: 0, max: 0)
+                            
                             onDismiss()
                         }
                     }
@@ -132,6 +138,10 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
             self.translationKey = value
         }
         .onPreferenceChange(SheetPlusConfiguration.self) { value in
+            /// Quick hack to prevent the scrollview from resetting the height when keyboard shows up.
+            /// Replace if the root cause has been located.
+            if value.detents.count == 0 { return }
+            
             detents = value.detents
             limits = detentLimits(detents: value.detents)
             
