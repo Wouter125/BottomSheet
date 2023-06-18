@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct SheetPlusConfigKey: Equatable {
-    let detents: Set<PresentationDetent>
+    let id = UUID().uuidString
     
+    let detents: Set<PresentationDetent>
     @Binding var selection: PresentationDetent
     
     init(
@@ -21,7 +22,7 @@ struct SheetPlusConfigKey: Equatable {
     }
     
     static func == (lhs: SheetPlusConfigKey, rhs: SheetPlusConfigKey) -> Bool {
-        return lhs.selection == rhs.selection
+        return lhs.id == rhs.id
     }
 }
 

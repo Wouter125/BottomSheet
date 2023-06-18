@@ -10,15 +10,21 @@ import BottomSheet
 
 struct StocksExample: View {
     @EnvironmentObject var settings: SheetSettings
-    
+
     var body: some View {
-        Color.clear
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("\(settings.translation.rounded())")
-            .onAppear {
-                settings.isPresented = true
-                settings.activeSheetType = .stocks
+        VStack {
+            Button("Close") {
+                settings.isPresented.toggle()
             }
+
+            Color.clear
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle("\(settings.translation.rounded())")
+                .onAppear {
+                    settings.isPresented = true
+                    settings.activeSheetType = .stocks
+                }
+        }
     }
 }
 
@@ -51,6 +57,7 @@ struct StocksHeader: View {
 struct StocksMainContent: View {
     var body: some View {
         VStack(spacing: 0) {
+            TextField("Test", text: .constant(""))
             ScrollView {
                 ForEach(0..<5, id: \.self) { _ in
                     newsRow
