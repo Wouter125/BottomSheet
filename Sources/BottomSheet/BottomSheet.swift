@@ -44,11 +44,9 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
         ZStack() {
             content
             
-            if isPresented {
-                GeometryReader { geometry in
-                    VStack(spacing: 0) {
-                        Spacer()
-                        
+            VStack {
+                if isPresented {
+                    GeometryReader { geometry in
                         VStack(spacing: 0) {
                             hcontent
                                 .contentShape(Rectangle())
@@ -99,7 +97,7 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                                     ? limits.max - geometry.safeAreaInsets.top
                                     : limits.max
                         )
-                        .offset(y: limits.max - translation)
+                        .offset(y: UIScreen.main.bounds.height - translation)
                         .onChange(of: translation) { newValue in
                             if limits.max == 0 { return }
                             translation = min(limits.max, max(newValue, limits.min))
@@ -119,18 +117,30 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                         }
                     }
                     .edgesIgnoringSafeArea([.bottom])
+                    .transition(.move(edge: .bottom))
                 }
             }
+            .animation(
+                .interpolatingSpring(
+                    mass: animationCurve.mass,
+                    stiffness: animationCurve.stiffness,
+                    damping: animationCurve.damping
+                )
+            )
         }
         .onPreferenceChange(SheetPlusTranslation.self) { value in
             self.translationKey = value
         }
         .onPreferenceChange(SheetPlusConfiguration.self) { value in
             detents = value.detents
-            limits = detentLimits(detents: detents)
-            translation = value.$selection.wrappedValue.size
+            limits = detentLimits(detents: value.detents)
             
-            self.preferenceKey = value
+            if value.selection == .height(.zero) {
+                translation = limits.min
+            } else {
+                translation = value.$selection.wrappedValue.size
+            }
+            
         }
     }
 }

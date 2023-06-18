@@ -42,8 +42,7 @@ struct ExampleOverview: View {
             return AnyView(
                 StocksMainContent()
                     .presentationDetentsPlus(
-                        [.height(244), .medium, .large],
-                        selection: $settings.selectedDetent
+                        [.height(244), .medium, .large]
                     )
             )
         default:
