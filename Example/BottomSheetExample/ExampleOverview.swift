@@ -27,27 +27,27 @@ struct ExampleOverview: View {
         (label: "Stocks example", view: AnyView(StocksExample()))
     ]
 
-    func headerContent() -> some View {
+    @ViewBuilder
+    var headerContent: some View {
         switch settings.activeSheetType {
         case .stocks:
-            return AnyView(StocksHeader())
+            StocksHeader()
         default:
-            return AnyView(EmptyView())
+            EmptyView()
         }
     }
 
-    func mainContent() -> some View {
+    @ViewBuilder
+    var mainContent: some View {
         switch settings.activeSheetType {
         case .stocks:
-            return AnyView(
-                StocksMainContent()
-                    .presentationDetentsPlus(
-                        [.height(244), .medium, .large],
-                        selection: $settings.selectedDetent
-                    )
-            )
+            StocksMainContent()
+                .presentationDetentsPlus(
+                    [.height(244), .medium, .large],
+                    selection: $settings.selectedDetent
+                )
         default:
-            return AnyView(EmptyView())
+            EmptyView()
         }
     }
 
@@ -80,9 +80,9 @@ struct ExampleOverview: View {
             onDrag: { translation in
                 settings.translation = translation
             },
-            header: { headerContent() },
+            header: { headerContent },
             main: {
-                mainContent()
+                mainContent
             }
         )
         .overlay(
