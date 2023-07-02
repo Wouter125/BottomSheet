@@ -42,7 +42,8 @@ struct ExampleOverview: View {
             return AnyView(
                 StocksMainContent()
                     .presentationDetentsPlus(
-                        [.height(244), .medium, .large]
+                        [.height(244), .medium, .large],
+                        selection: $settings.selectedDetent
                     )
             )
         default:
@@ -76,10 +77,12 @@ struct ExampleOverview: View {
                 Color(UIColor.secondarySystemBackground)
                     .cornerRadius(12, corners: [.topLeft, .topRight])
             ),
+            onDrag: { translation in
+                settings.translation = translation
+            },
             header: { headerContent() },
             main: {
                 mainContent()
-                    .onSheetDrag(translation: $settings.translation)
             }
         )
         .overlay(

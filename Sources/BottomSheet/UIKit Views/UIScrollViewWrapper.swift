@@ -11,17 +11,16 @@ import UIKit
 
 struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     @Binding var translation: CGFloat
-    @Binding var preferenceKey: SheetPlusConfigKey?
-    @Binding var detents: Set<PresentationDetent>
-    @Binding var limits: (min: CGFloat, max: CGFloat)
+    @Binding var preferenceKey: SheetPlusConfig?
     
-    private let scrollView = UIScrollView()
-    private let hostingController = UIHostingController(rootView: AnyView(EmptyView()))
+    let limits: (min: CGFloat, max: CGFloat)
+    let detents: Set<PresentationDetent>
     
     let content: () -> Content
     
     func makeUIView(context: Context) -> UIScrollView {
-        hostingController.rootView = AnyView(self.content())
+        let scrollView = UIScrollView()
+        let hostingController = context.coordinator.hostingController
         
         scrollView.addSubview(hostingController.view)
         
@@ -46,24 +45,46 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         return scrollView
     }
     
-    func updateUIView(_ scrollView: UIScrollView, context: Context) {}
+    func updateUIView(_ scrollView: UIScrollView, context: Context) {
+        context.coordinator.limits = limits
+        context.coordinator.detents = detents
+        
+        context.coordinator.hostingController.rootView = self.content()
+    }
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        return Coordinator(
+            representable: self,
+            hostingController: UIHostingController(rootView: content()),
+            limits: limits,
+            detents: detents
+        )
     }
     
     class Coordinator: NSObject, UIScrollViewDelegate {
         private var scrollOffset: CGFloat = 0
         private var newValue: CGFloat = 0
         
-        private var representable: UIScrollViewWrapper
+        var representable: UIScrollViewWrapper
+        var hostingController: UIHostingController<Content>
         
-        init(_ representable: UIScrollViewWrapper) {
+        var limits: (min: CGFloat, max: CGFloat)
+        var detents: Set<PresentationDetent>
+        
+        init(
+            representable: UIScrollViewWrapper,
+            hostingController: UIHostingController<Content>,
+            limits: (min: CGFloat, max: CGFloat),
+            detents: Set<PresentationDetent>
+        ) {
+            self.hostingController = hostingController
+            self.limits = limits
+            self.detents = detents
             self.representable = representable
         }
         
         private func shouldDragSheet(_ scrollViewPosition: CGFloat) -> Bool {
-            if representable.translation >= representable.limits.max {
+            if representable.translation >= limits.max {
                 if scrollViewPosition > scrollOffset {
                     scrollOffset = scrollViewPosition
                 }
@@ -73,43 +94,43 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
 
             return true
         }
-        
+
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
             guard scrollView.isTracking else { return }
             guard shouldDragSheet(scrollView.contentOffset.y) else {
                 scrollView.showsVerticalScrollIndicator = true
                 return
             }
-
-            let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y - scrollOffset
-            let translationDelta = translation - newValue
+            
+            let localTranslation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y - scrollOffset
+            let translationDelta = localTranslation - newValue
 
             representable.translation -= translationDelta
 
-            newValue = translation
-            
+            newValue = localTranslation
+
             scrollView.showsVerticalScrollIndicator = false
             scrollView.contentOffset.y = .zero
         }
-        
+
         func scrollViewWillEndDragging(
             _ scrollView: UIScrollView,
             withVelocity velocity: CGPoint,
             targetContentOffset: UnsafeMutablePointer<CGPoint>
         ) {
-            if representable.translation != representable.limits.max {
+            if representable.translation != limits.max {
                 targetContentOffset.pointee = .zero
             }
             
             if let result = snapBottomSheet(
                 representable.translation,
-                representable.detents,
+                detents,
                 scrollView.contentOffset.y > 0 ? 0 : velocity.y
             ) {
                 representable.translation = result.size
-                representable.preferenceKey?.$selection.wrappedValue = result
+                representable.preferenceKey?.selectedDetent = result
             }
-            
+
             scrollOffset = 0
             newValue = 0
         }
