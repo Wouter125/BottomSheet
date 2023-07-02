@@ -121,6 +121,10 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
             }
         }
         .onPreferenceChange(SheetPlusKey.self) { value in
+            /// Quick hack to prevent the scrollview from resetting the height when keyboard shows up.
+            /// Replace if the root cause has been located.
+            if value.detents.count == 0 { return }
+                                                
             sheetConfig = value
             translation = value.translation
 
