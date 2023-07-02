@@ -17,6 +17,10 @@ struct StocksExample: View {
                 settings.isPresented.toggle()
             }
 
+            Button("Change") {
+                settings.selectedDetent = .large
+            }
+            
             Color.clear
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationTitle("\(settings.translation.rounded())")

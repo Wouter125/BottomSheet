@@ -7,29 +7,21 @@
 
 import SwiftUI
 
-struct SheetPlusConfigKey: Equatable {
-    let id = UUID().uuidString
-    
+struct SheetPlusConfig: Equatable {
     let detents: Set<PresentationDetent>
-    @Binding var selection: PresentationDetent
+    @Binding var selectedDetent: PresentationDetent
+    let translation: CGFloat
     
-    init(
-        detents: Set<PresentationDetent>,
-        selection: Binding<PresentationDetent> = .constant(.height(.zero))
-    ) {
-        self.detents = detents
-        self._selection = selection
-    }
     
-    static func == (lhs: SheetPlusConfigKey, rhs: SheetPlusConfigKey) -> Bool {
-        return lhs.id == rhs.id
+    static func == (lhs: SheetPlusConfig, rhs: SheetPlusConfig) -> Bool {
+        return lhs.selectedDetent == rhs.selectedDetent && lhs.translation == rhs.translation && lhs.detents == rhs.detents
     }
 }
 
-struct SheetPlusConfiguration: PreferenceKey {
-    static var defaultValue: SheetPlusConfigKey = SheetPlusConfigKey(detents: [])
+struct SheetPlusKey: PreferenceKey {
+    static var defaultValue: SheetPlusConfig = SheetPlusConfig(detents: [], selectedDetent: .constant(.height(.zero)), translation: 0)
     
-    static func reduce(value: inout SheetPlusConfigKey, nextValue: () -> SheetPlusConfigKey) {
+    static func reduce(value: inout SheetPlusConfig, nextValue: () -> SheetPlusConfig) {
         value = nextValue()
     }
 }
