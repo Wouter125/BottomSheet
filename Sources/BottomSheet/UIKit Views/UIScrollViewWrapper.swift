@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UIScrollViewWrapper.swift
 //  
 //
 //  Created by Wouter van de Kamp on 20/11/2022.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
-struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
+internal struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     @Binding var translation: CGFloat
     @Binding var preferenceKey: SheetPlusConfig?
     
@@ -84,7 +84,10 @@ struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         }
         
         private func shouldDragSheet(_ scrollViewPosition: CGFloat) -> Bool {
-            if representable.translation >= limits.max {
+            // Translation on a scrollview without an overflow get's set to 0 somehow.
+            // Implemented this check to prevent it from snapping back to the original position.
+            // Need to dive deeper to figure out why it gets set to 0.
+            if representable.translation >= limits.max && representable.translation == 0 {
                 if scrollViewPosition > scrollOffset {
                     scrollOffset = scrollViewPosition
                 }

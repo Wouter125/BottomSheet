@@ -11,6 +11,7 @@ import BottomSheet
 enum SheetExampleTypes {
     case home
     case stocks
+    case staticScrollView
 }
 
 class SheetSettings: ObservableObject {
@@ -24,7 +25,8 @@ struct ExampleOverview: View {
     @StateObject var settings = SheetSettings()
 
     var views: [(label: String, view: AnyView)] = [
-        (label: "Stocks example", view: AnyView(StocksExample()))
+        (label: "Stocks example", view: AnyView(StocksExample())),
+        (label: "Static scrollview example", view: AnyView(StaticScrollViewExample()))
     ]
 
     @ViewBuilder
@@ -32,6 +34,8 @@ struct ExampleOverview: View {
         switch settings.activeSheetType {
         case .stocks:
             StocksHeader()
+        case .staticScrollView:
+            StaticScrollViewHeader()
         default:
             EmptyView()
         }
@@ -46,6 +50,14 @@ struct ExampleOverview: View {
                     [.height(244), .medium, .large],
                     selection: $settings.selectedDetent
                 )
+        case .staticScrollView:
+            StaticScrollViewContent()
+                .presentationDetentsPlus(
+                    [.height(244), .height(380), .height(480), .large],
+                    selection: $settings.selectedDetent
+                )
+                .presentationDragIndicatorPlus(.visible)
+                .presentationBackgroundInteractionPlus(.enabled(upThrough: .height(380)))
         default:
             EmptyView()
         }

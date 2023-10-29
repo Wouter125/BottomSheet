@@ -1,10 +1,19 @@
+//
+//  BottomSheet.swift
+//
+//
+//  Created by Wouter van de Kamp on 26/11/2022.
+//
+
 import SwiftUI
 
-struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier {
+struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier, KeyboardReader {
     @Binding private var isPresented: Bool
     
     @State private var translation: CGFloat = 0
     @State private var sheetConfig: SheetPlusConfig?
+    @State private var showDragIndicator: VisibilityPlus?
+    @State private var allowBackgroundInteraction: PresentationBackgroundInteractionPlus?
     
     @State private var newValue = 0.0
     @State private var startTime: DragGesture.Value?
@@ -42,10 +51,20 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
     func body(content: Content) -> some View {
         ZStack() {
             content
+                .allowsHitTesting(allowBackgroundInteraction == .disabled ? false : true)
                 
             if isPresented {
                 GeometryReader { geometry in
                     VStack(spacing: 0) {
+                        // If / else statement here breaks the animation from the bottom level
+                        // Might want to see if we can refactor the top level animation a bit
+                        DragIndicator(
+                            translation: $translation,
+                            detents: detents
+                        )
+                            .frame(height: showDragIndicator == .visible ? 22 : 0)
+                            .opacity(showDragIndicator == .visible ? 1 : 0)
+
                         headerContent
                             .contentShape(Rectangle())
                             .gesture(
@@ -97,6 +116,8 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                         // Small little hack to make the iOS scroll behaviour work smoothly
                         if limits.max == 0 { return }
                         translation = min(limits.max, max(newValue, limits.min))
+
+                        currentGlobalTranslation = translation
                     }
                     .onAnimationChange(of: translation) { value in
                         onDrag(value)
@@ -130,6 +151,12 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
 
             detents = value.detents
             limits = detentLimits(detents: detents)
+        }
+        .onPreferenceChange(SheetPlusIndicatorKey.self) { value in
+            showDragIndicator = value
+        }
+        .onPreferenceChange(SheetPlusBackgroundInteractionKey.self) { value in
+            allowBackgroundInteraction = value
         }
     }
 }

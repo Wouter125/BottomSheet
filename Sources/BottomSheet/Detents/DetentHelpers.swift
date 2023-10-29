@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  DetentsHelper.swift
 //  
 //
 //  Created by Wouter van de Kamp on 20/11/2022.
@@ -10,7 +10,7 @@ import SwiftUI
 /// Computes the limits of how far the sheet can move.
 /// - Parameter detents: The list of detents provided when initializing the bottomsheet
 /// - Returns: Tuple with top and bottom. Top reflects the offset from the top of the screen when the sheet is in it's largest form. Bottom reflects the offset from the top of the screen when the sheet is in it's smallest form.
-func detentLimits(detents: Set<PresentationDetent>) -> (min: CGFloat, max: CGFloat) {
+internal func detentLimits(detents: Set<PresentationDetent>) -> (min: CGFloat, max: CGFloat) {
     let detentLimits: [CGFloat] = detents
         .map { detent in
             switch detent {

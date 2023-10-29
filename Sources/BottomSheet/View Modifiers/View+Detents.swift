@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  View+Detents.swift
 //  
 //
 //  Created by Wouter van de Kamp on 02/07/2023.

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Snapping.swift
 //  
 //
 //  Created by Wouter van de Kamp on 20/11/2022.
@@ -13,8 +13,8 @@ import Foundation
 ///   - detents: the detents the translation can snap to
 ///   - yVelocity: the speed at which the drag gesture ended. Used to compute a snapping behaviour
 /// - Returns: The snapping position distance
-func snapBottomSheet(_ translation: CGFloat, _ detents: Set<PresentationDetent>, _ yVelocity: CGFloat) -> PresentationDetent? {
-    let detents = Array(detents).sorted(by: { $0.size < $1.size })
+internal func snapBottomSheet(_ translation: CGFloat, _ detents: Set<PresentationDetent>, _ yVelocity: CGFloat) -> PresentationDetent? {
+    let detents = detents.sorted(by: { $0.size < $1.size })
     
     let position: [PresentationDetent] = detents.enumerated().compactMap { idx, detent in
         if idx < detents.index(before: detents.count) {
