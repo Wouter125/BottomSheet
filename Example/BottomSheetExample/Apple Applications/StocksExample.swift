@@ -20,7 +20,7 @@ struct StocksExample: View {
             Button("Change") {
                 settings.selectedDetent = .large
             }
-            
+
             Color.clear
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationTitle("\(settings.translation.rounded())")
@@ -61,7 +61,6 @@ struct StocksHeader: View {
 struct StocksMainContent: View {
     var body: some View {
         VStack(spacing: 0) {
-            TextField("Test", text: .constant(""))
             ScrollView {
                 ForEach(0..<5, id: \.self) { _ in
                     newsRow

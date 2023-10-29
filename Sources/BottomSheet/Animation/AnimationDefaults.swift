@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AnimationDefaults.swift
 //  
 //
 //  Created by Wouter van de Kamp on 26/11/2022.

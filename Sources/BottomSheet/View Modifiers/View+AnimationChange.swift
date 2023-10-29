@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AnimationObserverModifier<Value>: AnimatableModifier where Value: VectorArithmetic {
+internal struct AnimationObserverModifier<Value>: AnimatableModifier where Value: VectorArithmetic {
     var animatableData: Value {
         didSet {
             updateAnimationData()
