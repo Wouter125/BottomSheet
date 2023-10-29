@@ -83,11 +83,19 @@ internal struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             self.representable = representable
         }
         
-        private func shouldDragSheet(_ scrollViewPosition: CGFloat) -> Bool {
+        private func shouldDragSheet(_ scrollViewPosition: CGFloat, isFixedHeight: Bool) -> Bool {
             // Translation on a scrollview without an overflow get's set to 0 somehow.
             // Implemented this check to prevent it from snapping back to the original position.
             // Need to dive deeper to figure out why it gets set to 0.
-            if representable.translation >= limits.max && representable.translation == 0 {
+            if isFixedHeight && representable.translation == 0 {
+                if scrollViewPosition > scrollOffset {
+                    scrollOffset = scrollViewPosition
+                }
+
+                return scrollViewPosition < 0
+            }
+
+            if representable.translation >= limits.max {
                 if scrollViewPosition > scrollOffset {
                     scrollOffset = scrollViewPosition
                 }
@@ -99,8 +107,10 @@ internal struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
         }
 
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            let isFixedHeight = scrollView.contentSize.height < scrollView.frame.size.height
+
             guard scrollView.isTracking else { return }
-            guard shouldDragSheet(scrollView.contentOffset.y) else {
+            guard shouldDragSheet(scrollView.contentOffset.y, isFixedHeight: isFixedHeight) else {
                 scrollView.showsVerticalScrollIndicator = true
                 return
             }
