@@ -48,25 +48,29 @@ Currently BottomSheet is only available through the [Swift Package Manager](http
 )
 ```
 
-5. Optionally receive the current panel position with a callback, set a custom background or change the animation curves;
-
+5. Optionally receive the current panel position with a callback, change the background color, show a drag indicator or limit the background interaction based on the height;
 ```
-BottomSheetView(
-    position: $position,
-    animationCurve: SheetAnimation(
-        mass: 1,
-        stiffness: 250,
-        damping: 25
-    ),
+.sheetPlus(
+    isPresented: $isPresented,
     background: (
         Color(UIColor.secondarySystemBackground)
+            .cornerRadius(12, corners: [.topLeft, .topRight])
     ),
-    header: { },
-    content: {
-        EmptyView()
-            .onSheetDrag(translation: $settings.translation)
+    onDrag: { translation in
+        settings.translation = translation
     }
-}
+    header: { },
+    main: { 
+        EmptyView()
+            .presentationDetentsPlus(
+                [.height(244), .fraction(0.4), .medium, .large],
+                selection: $selectedDetent
+            )
+            .presentationDragIndicatorPlus(.visible)
+            .presentationBackgroundInteractionPlus(.enabled(upThrough: .height(380)))
+            
+    }
+)
 ```
 
 ## Interface
