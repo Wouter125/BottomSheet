@@ -57,7 +57,7 @@ Currently BottomSheet is only available through the [Swift Package Manager](http
             .cornerRadius(12, corners: [.topLeft, .topRight])
     ),
     onDrag: { translation in
-        settings.translation = translation
+        print(translation)
     }
     header: { },
     main: { 
