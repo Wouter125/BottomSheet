@@ -20,6 +20,8 @@ internal func detentLimits(detents: Set<PresentationDetent>) -> (min: CGFloat, m
                 return PresentationDetentDefaults.medium
             case .large:
                 return PresentationDetentDefaults.large
+            case .hidden:
+                return PresentationDetentDefaults.hidden
             case .fraction(let fraction):
                 return UIScreen.main.bounds.height * fraction
             case .height(let height):
