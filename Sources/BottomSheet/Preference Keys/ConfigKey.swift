@@ -19,8 +19,8 @@ struct SheetPlusConfig: Equatable {
 }
 
 struct SheetPlusKey: PreferenceKey {
-  static var defaultValue: SheetPlusConfig = SheetPlusConfig(detents: [], selectedDetent: .constant(.hidden), translation: 0)
-    
+    static var defaultValue: SheetPlusConfig = SheetPlusConfig(detents: [], selectedDetent: .constant(.height(.zero)), translation: 0)
+
     static func reduce(value: inout SheetPlusConfig, nextValue: () -> SheetPlusConfig) {
         /// This prevents the translation changes to be called whenever the keyboard is triggered.
         /// If the keyboard gets triggered it will also reset the whole configkey and losing the binding.

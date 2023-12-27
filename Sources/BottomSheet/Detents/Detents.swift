@@ -13,7 +13,6 @@ import SwiftUI
  - `small`: A small sized bottom sheet. `.fraction(0.2)`
  - `medium`: A medium sized bottom sheet, `.fraction(0.5)`
  - `large`: A large sized bottom sheet. `.fraction(0.9)`
- - `hidden`: Hide bottom sheet.
  - `fraction`: Relative to screen height.
  - `height`: A constant height.
  */
@@ -33,11 +32,6 @@ public enum PresentationDetent: Hashable {
       .fraction(0.9)
      */
     case large
-  
-    /**
-      Hide bottom sheet
-     */
-    case hidden
     
     /**
       CGFloat 0 to 1
@@ -57,8 +51,6 @@ public enum PresentationDetent: Hashable {
             return PresentationDetentDefaults.medium
         case .large:
             return PresentationDetentDefaults.large
-        case .hidden:
-            return PresentationDetentDefaults.hidden
         case .fraction(let fraction):
             return min(
                 UIScreen.main.bounds.height * fraction,

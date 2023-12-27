@@ -53,11 +53,12 @@ struct ExampleOverview: View {
         case .staticScrollView:
             StaticScrollViewContent()
                 .presentationDetentsPlus(
-                    [.height(244), .height(380), .height(480), .large],
+                    [.height(380), .height(480), .large],
                     selection: $settings.selectedDetent
                 )
                 .presentationDragIndicatorPlus(.visible)
-                .presentationBackgroundInteractionPlus(.enabled(upThrough: .height(380)))
+//                .presentationBackgroundInteractionPlus(.enabled(upThrough: .height(380)))
+                .interactiveDismissDisabledPlus(false)
         default:
             EmptyView()
         }
