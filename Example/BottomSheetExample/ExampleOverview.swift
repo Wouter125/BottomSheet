@@ -54,7 +54,7 @@ struct ExampleOverview: View {
             StaticScrollViewContent()
                 .presentationDetentsPlus(
                     [.height(380), .height(480), .large],
-                    selection: $settings.selectedDetent
+                    selection: $settings.selectedDetent // .constant(.medium)
                 )
                 .presentationDragIndicatorPlus(.visible)
 //                .presentationBackgroundInteractionPlus(.enabled(upThrough: .height(380)))
@@ -78,7 +78,7 @@ struct ExampleOverview: View {
                 .onAppear {
                     settings.isPresented = false
                     settings.activeSheetType = .home
-                    settings.selectedDetent = .medium
+                    settings.selectedDetent = .height(.zero)
                 }
             }
             .navigationViewStyle(.stack)

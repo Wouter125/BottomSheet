@@ -25,6 +25,7 @@ struct StaticScrollViewExample: View {
                 .navigationTitle("\(settings.translation.rounded())")
                 .onAppear {
                     settings.isPresented = true
+                    settings.selectedDetent = .medium
                     settings.activeSheetType = .staticScrollView
                 }
         }

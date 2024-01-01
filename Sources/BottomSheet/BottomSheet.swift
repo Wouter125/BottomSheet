@@ -21,7 +21,9 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
     
     @State private var detents: Set<PresentationDetent> = []
     @State private var limits: (min: CGFloat, max: CGFloat) = (min: 0, max: 0)
-    
+
+    @State private var initialSelectedDetent: PresentationDetent? = nil
+
     let mainContent: MContent
     let headerContent: HContent
     let animationCurve: SheetAnimation
@@ -53,7 +55,14 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
         ZStack() {
             content
                 .allowsHitTesting(allowBackgroundInteraction == .disabled ? false : true)
-                
+                .onChange(of: isPresented) { newValue in
+                    guard let initialSelectedDetent = initialSelectedDetent else { return }
+
+                    if sheetConfig?.selectedDetent == PresentationDetent.height(0.0) && newValue == true {
+                        sheetConfig?.selectedDetent = initialSelectedDetent
+                    }
+                }
+
             if isPresented {
                 GeometryReader { geometry in
                     VStack(spacing: 0) {
@@ -90,8 +99,6 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                                         let yVelocity: CGFloat = -1 * ((distance / time) / 1000)
                                         startTime = nil
 
-                                        print(isInteractiveDismissDisabled)
-
                                         if let result = snapBottomSheet(
                                             translation,
                                             detents,
@@ -103,7 +110,7 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                                         }
                                     }
                             )
-                        
+
                         UIScrollViewWrapper(
                             translation: $translation,
                             preferenceKey: $sheetConfig,
@@ -139,9 +146,6 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                     }
                     .offset(y: UIScreen.main.bounds.height - translation)
                     .onDisappear {
-                        translation = 0
-//                        detents = []
-                        
                         onDismiss()
                     }
                     .animation(
@@ -163,7 +167,11 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                 isPresented = false
                 return
             }
-                                                
+
+            if initialSelectedDetent == nil {
+                initialSelectedDetent = value.selectedDetent
+            }
+
             sheetConfig = value
             translation = value.translation
 
