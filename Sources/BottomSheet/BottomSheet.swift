@@ -23,6 +23,7 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
     @State private var limits: (min: CGFloat, max: CGFloat) = (min: 0, max: 0)
 
     @State private var initialSelectedDetent: PresentationDetent? = nil
+    @State private var isDismissed = false
 
     let mainContent: MContent
     let headerContent: HContent
@@ -58,12 +59,19 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                 .onChange(of: isPresented) { newValue in
                     guard let initialSelectedDetent = initialSelectedDetent else { return }
 
-                    if sheetConfig?.selectedDetent == PresentationDetent.height(0.0) && newValue == true {
+                    if newValue == true {
+                        isDismissed = false
                         sheetConfig?.selectedDetent = initialSelectedDetent
+                    }
+
+                    if newValue == false {
+                        print("Running")
+                        translation = 0
+                        sheetConfig?.selectedDetent = PresentationDetent.height(.zero)
                     }
                 }
 
-            if isPresented {
+            if !isDismissed {
                 GeometryReader { geometry in
                     VStack(spacing: 0) {
                         // If / else statement here breaks the animation from the bottom level
@@ -132,15 +140,16 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                         // Small little hack to make the iOS scroll behaviour work smoothly
                         if limits.max == 0 { return }
 
-                        let minValue = isInteractiveDismissDisabled ? limits.min : 0
+                        let minValue = isInteractiveDismissDisabled && isPresented ? limits.min : 0
                         translation = min(limits.max, max(newValue, minValue))
 
                         currentGlobalTranslation = translation
                     }
                     .onAnimationChange(of: translation) { value in
-                        onDrag(value)
+                        onDrag(value > 0 ? value : 0)
 
                         if value <= 0 && sheetConfig?.selectedDetent == .height(.zero) {
+                            isDismissed = true
                             isPresented = false
                         }
                     }
