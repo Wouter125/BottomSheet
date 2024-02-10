@@ -22,9 +22,11 @@ struct SheetPlusKey: PreferenceKey {
     static var defaultValue: SheetPlusConfig = SheetPlusConfig(detents: [], selectedDetent: .constant(.height(.zero)), translation: 0)
 
     static func reduce(value: inout SheetPlusConfig, nextValue: () -> SheetPlusConfig) {
+        value = nextValue()
+    }
+}
+
         /// This prevents the translation changes to be called whenever the keyboard is triggered.
         /// If the keyboard gets triggered it will also reset the whole configkey and losing the binding.
         /// https://stackoverflow.com/questions/67644164/preferencekey-issue-swiftui-sometimes-seems-to-generate-additional-views-that
-        value = nextValue() != defaultValue ? nextValue() : value
-    }
-}
+//        value = nextValue() != defaultValue ? nextValue() : value

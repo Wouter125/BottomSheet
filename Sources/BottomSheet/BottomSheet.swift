@@ -65,7 +65,6 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                     }
 
                     if newValue == false {
-                        print("Running")
                         translation = 0
                         sheetConfig?.selectedDetent = PresentationDetent.height(.zero)
                     }

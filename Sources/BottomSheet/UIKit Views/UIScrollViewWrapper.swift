@@ -49,7 +49,7 @@ internal struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     func updateUIView(_ scrollView: UIScrollView, context: Context) {
         context.coordinator.limits = limits
         context.coordinator.detents = detents
-        
+
         context.coordinator.hostingController.rootView = self.content()
     }
     
@@ -143,7 +143,10 @@ internal struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
                 representable.isInteractiveDismissDisabled
             ) {
                 representable.translation = result.size
-                representable.preferenceKey?.selectedDetent = result
+
+                if result.size != .zero {
+                    representable.preferenceKey?.selectedDetent = result
+                }
             }
 
             scrollOffset = 0
