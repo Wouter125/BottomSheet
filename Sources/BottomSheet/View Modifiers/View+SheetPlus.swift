@@ -41,6 +41,7 @@ extension View {
             stiffness: SheetAnimationDefaults.stiffness,
             damping: SheetAnimationDefaults.damping
         ),
+        onDismiss: @escaping () -> Void = {},
         onDrag: @escaping (CGFloat) -> Void = { _ in },
         header: () -> HContent = { EmptyView() },
         main: () -> MContent
@@ -49,6 +50,7 @@ extension View {
             SheetPlusV2(
                 isPresented: isPresented,
                 animationCurve: animationCurve,
+                onDismiss: onDismiss,
                 onDrag: onDrag,
                 hcontent: header,
                 mcontent: main

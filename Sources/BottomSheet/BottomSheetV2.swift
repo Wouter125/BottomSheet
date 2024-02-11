@@ -24,14 +24,18 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
     @State private var background: EquatableBackground?
     @State private var isInteractiveDismissDisabled = true
 
+    @State private var viewWillPresent = false
+
     let animationCurve: SheetAnimation
     let onDrag: (CGFloat) -> Void
     let mainContent: MContent
     let headerContent: HContent
+    let onDismiss: () -> Void
 
     init(
         isPresented: Binding<Bool>,
         animationCurve: SheetAnimation,
+        onDismiss: @escaping () -> Void,
         onDrag: @escaping (CGFloat) -> Void = { _ in },
         @ViewBuilder hcontent: () -> HContent,
         @ViewBuilder mcontent: () -> MContent
@@ -39,6 +43,7 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
         self._isPresented = isPresented
         self.animationCurve = animationCurve
 
+        self.onDismiss = onDismiss
         self.onDrag = onDrag
 
         self.headerContent = hcontent()
@@ -49,9 +54,15 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
         ZStack {
             content
                 .zIndex(1)
+                .onChange(of: isPresented) { value in
+                    if (value == true) {
+                        viewWillPresent = value
+                    } else {
+                        translation = .zero
+                    }
+                }
 
-
-            if isPresented {
+            if viewWillPresent {
                 // VStack to stick the sheet to the bottom
                 VStack(spacing: 0) {
                     Spacer()
@@ -80,29 +91,7 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
                                     }
                                 }
                                 .onEnded { value in
-                                    // Reset the distance on release so we start with a
-                                    // clean translation next time
-                                    newValue = 0
-
-                                    // Calculate velocity based on pt/s so it matches the UIPanGesture
-                                    let distance: CGFloat = value.translation.height
-                                    let time: CGFloat = value.time.timeIntervalSince(startTime!.time)
-
-                                    let yVelocity: CGFloat = -1 * ((distance / time) / 1000)
-                                    startTime = nil
-
-                                    if let result = snapBottomSheet(
-                                        translation,
-                                        detents,
-                                        yVelocity,
-                                        isInteractiveDismissDisabled
-                                    ) {
-                                        translation = result.size
-
-                                        if result.size != .zero {
-                                            sheetConfig?.selectedDetent = result
-                                        }
-                                    }
+                                    onDragEnded(with: value)
                                 }
                         )
 
@@ -134,17 +123,21 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
                             .cornerRadius(cornerRadius ?? 0)
                     )
                     .onChange(of: translation) { value in
-                        translation = min(limits.max, max(value, isInteractiveDismissDisabled ? limits.min : .zero))
+                        let minLimit = isInteractiveDismissDisabled && isPresented ? limits.min : .zero
+                        translation = min(limits.max, max(value, minLimit))
                     }
                     .onAnimationChange(of: translation) { value in
                         onDrag(value > .zero ? value : .zero)
 
+                        print(translation)
+
                         if (translation == 0 && value == .zero) {
                             isPresented = false
+                            viewWillPresent = false
                         }
                     }
                     .onDisappear {
-                        print("Dismissed")
+                        onDismiss()
                     }
                     .animation(
                         .interpolatingSpring(
@@ -176,6 +169,32 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
         }
         .onPreferenceChange(SheetPlusPresentationBackgroundKey.self) { value in
             background = value
+        }
+    }
+
+    func onDragEnded(with value: DragGesture.Value) {
+        // Reset the distance on release so we start with a
+        // clean translation next time
+        newValue = 0
+
+        // Calculate velocity based on pt/s so it matches the UIPanGesture
+        let distance: CGFloat = value.translation.height
+        let time: CGFloat = value.time.timeIntervalSince(startTime!.time)
+
+        let yVelocity: CGFloat = -1 * ((distance / time) / 1000)
+        startTime = nil
+
+        if let result = snapBottomSheet(
+            translation,
+            detents,
+            yVelocity,
+            isInteractiveDismissDisabled
+        ) {
+            translation = result.size
+
+            if result.size != .zero {
+                sheetConfig?.selectedDetent = result
+            }
         }
     }
 }
