@@ -13,7 +13,7 @@ struct StocksExample: View {
 
     var body: some View {
         VStack {
-            Button("Close") {
+            Button(settings.isPresented ? "Close" : "Show") {
                 settings.isPresented.toggle()
             }
 
@@ -26,6 +26,7 @@ struct StocksExample: View {
                 .navigationTitle("\(settings.translation.rounded())")
                 .onAppear {
                     settings.isPresented = true
+                    settings.selectedDetent = .medium
                     settings.activeSheetType = .stocks
                 }
         }

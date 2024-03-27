@@ -33,4 +33,28 @@ extension View {
             )
         )
     }
+
+    public func sheetPlusV2<HContent: View, MContent: View>(
+        isPresented: Binding<Bool>,
+        animationCurve: SheetAnimation = SheetAnimation(
+            mass: SheetAnimationDefaults.mass,
+            stiffness: SheetAnimationDefaults.stiffness,
+            damping: SheetAnimationDefaults.damping
+        ),
+        onDismiss: @escaping () -> Void = {},
+        onDrag: @escaping (CGFloat) -> Void = { _ in },
+        header: () -> HContent = { EmptyView() },
+        main: () -> MContent
+    ) -> some View {
+        modifier(
+            SheetPlusV2(
+                isPresented: isPresented,
+                animationCurve: animationCurve,
+                onDismiss: onDismiss,
+                onDrag: onDrag,
+                hcontent: header,
+                mcontent: main
+            )
+        )
+    }
 }

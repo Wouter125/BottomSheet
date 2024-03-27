@@ -24,7 +24,7 @@ struct DragIndicator: View {
                 if let nextDetent = nextDetent {
                     translation = nextDetent.size
                 } else {
-                    translation = sortedDetents.first!.size
+                    translation = sortedDetents.first?.size ?? 0
                 }
             }
     }

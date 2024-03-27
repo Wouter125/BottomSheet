@@ -12,10 +12,11 @@ import UIKit
 internal struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     @Binding var translation: CGFloat
     @Binding var preferenceKey: SheetPlusConfig?
-    
+    @Binding var isInteractiveDismissDisabled: Bool
+
     let limits: (min: CGFloat, max: CGFloat)
     let detents: Set<PresentationDetent>
-    
+
     let content: () -> Content
     
     func makeUIView(context: Context) -> UIScrollView {
@@ -48,7 +49,7 @@ internal struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
     func updateUIView(_ scrollView: UIScrollView, context: Context) {
         context.coordinator.limits = limits
         context.coordinator.detents = detents
-        
+
         context.coordinator.hostingController.rootView = self.content()
     }
     
@@ -138,10 +139,14 @@ internal struct UIScrollViewWrapper<Content: View>: UIViewRepresentable {
             if let result = snapBottomSheet(
                 representable.translation,
                 detents,
-                scrollView.contentOffset.y > 0 ? 0 : velocity.y
+                scrollView.contentOffset.y > 0 ? 0 : velocity.y,
+                representable.isInteractiveDismissDisabled
             ) {
                 representable.translation = result.size
-                representable.preferenceKey?.selectedDetent = result
+
+                if result.size != .zero {
+                    representable.preferenceKey?.selectedDetent = result
+                }
             }
 
             scrollOffset = 0

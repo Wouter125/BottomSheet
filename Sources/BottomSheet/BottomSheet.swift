@@ -7,20 +7,24 @@
 
 import SwiftUI
 
-struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier, KeyboardReader {
+struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier {
     @Binding private var isPresented: Bool
     
     @State private var translation: CGFloat = 0
     @State private var sheetConfig: SheetPlusConfig?
     @State private var showDragIndicator: VisibilityPlus?
     @State private var allowBackgroundInteraction: PresentationBackgroundInteractionPlus?
-    
+    @State private var isInteractiveDismissDisabled = true
+
     @State private var newValue = 0.0
     @State private var startTime: DragGesture.Value?
     
     @State private var detents: Set<PresentationDetent> = []
     @State private var limits: (min: CGFloat, max: CGFloat) = (min: 0, max: 0)
-    
+
+    @State private var initialSelectedDetent: PresentationDetent? = nil
+    @State private var isDismissed = false
+
     let mainContent: MContent
     let headerContent: HContent
     let animationCurve: SheetAnimation
@@ -51,9 +55,22 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
     func body(content: Content) -> some View {
         ZStack() {
             content
-                .allowsHitTesting(allowBackgroundInteraction == .disabled ? false : true)
-                
-            if isPresented {
+//                .allowsHitTesting(allowBackgroundInteraction == .disabled ? false : true)
+                .onChange(of: isPresented) { newValue in
+                    guard let initialSelectedDetent = initialSelectedDetent else { return }
+
+                    if newValue == true {
+                        isDismissed = false
+                        sheetConfig?.selectedDetent = initialSelectedDetent
+                    }
+
+                    if newValue == false {
+                        translation = 0
+                        sheetConfig?.selectedDetent = PresentationDetent.height(.zero)
+                    }
+                }
+
+            if !isDismissed {
                 GeometryReader { geometry in
                     VStack(spacing: 0) {
                         // If / else statement here breaks the animation from the bottom level
@@ -88,17 +105,23 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                                         
                                         let yVelocity: CGFloat = -1 * ((distance / time) / 1000)
                                         startTime = nil
-                                        
-                                        if let result = snapBottomSheet(translation, detents, yVelocity) {
+
+                                        if let result = snapBottomSheet(
+                                            translation,
+                                            detents,
+                                            yVelocity,
+                                            isInteractiveDismissDisabled
+                                        ) {
                                             translation = result.size
                                             sheetConfig?.selectedDetent = result
                                         }
                                     }
                             )
-                        
+
                         UIScrollViewWrapper(
                             translation: $translation,
                             preferenceKey: $sheetConfig,
+                            isInteractiveDismissDisabled: $isInteractiveDismissDisabled,
                             limits: limits,
                             detents: detents
                         ) {
@@ -115,18 +138,22 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                     .onChange(of: translation) { newValue in
                         // Small little hack to make the iOS scroll behaviour work smoothly
                         if limits.max == 0 { return }
-                        translation = min(limits.max, max(newValue, limits.min))
 
-                        currentGlobalTranslation = translation
+                        let minValue = isInteractiveDismissDisabled && isPresented ? limits.min : 0
+                        translation = min(limits.max, max(newValue, minValue))
+
+//                        currentGlobalTranslation = translation
                     }
                     .onAnimationChange(of: translation) { value in
-                        onDrag(value)
+                        onDrag(value > 0 ? value : 0)
+
+                        if value <= 0 && sheetConfig?.selectedDetent == .height(.zero) {
+                            isDismissed = true
+                            isPresented = false
+                        }
                     }
                     .offset(y: UIScreen.main.bounds.height - translation)
                     .onDisappear {
-                        translation = 0
-                        detents = []
-                        
                         onDismiss()
                     }
                     .animation(
@@ -144,8 +171,15 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
         .onPreferenceChange(SheetPlusKey.self) { value in
             /// Quick hack to prevent the scrollview from resetting the height when keyboard shows up.
             /// Replace if the root cause has been located.
-            if value.detents.count == 0 { return }
-                                                
+            if value.detents.count == 0 {
+                isPresented = false
+                return
+            }
+
+            if initialSelectedDetent == nil {
+                initialSelectedDetent = value.selectedDetent
+            }
+
             sheetConfig = value
             translation = value.translation
 
@@ -155,8 +189,11 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
         .onPreferenceChange(SheetPlusIndicatorKey.self) { value in
             showDragIndicator = value
         }
-        .onPreferenceChange(SheetPlusBackgroundInteractionKey.self) { value in
-            allowBackgroundInteraction = value
+//        .onPreferenceChange(SheetPlusBackgroundInteractionKey.self) { value in
+//            allowBackgroundInteraction = value
+//        }
+        .onPreferenceChange(SheetPlusInteractiveDismissDisabledKey.self) { value in
+            isInteractiveDismissDisabled = value
         }
     }
 }
