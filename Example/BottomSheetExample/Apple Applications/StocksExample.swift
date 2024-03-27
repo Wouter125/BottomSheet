@@ -13,7 +13,7 @@ struct StocksExample: View {
 
     var body: some View {
         VStack {
-            Button("Close") {
+            Button(settings.isPresented ? "Close" : "Show") {
                 settings.isPresented.toggle()
             }
 

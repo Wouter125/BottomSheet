@@ -19,27 +19,27 @@ import SwiftUI
 
 public enum PresentationDetent: Hashable {
     /**
-      .fraction(0.2)
+      The system detent for a sheet that’s approximately a quarter height of the screen, and is inactive in compact height.
      */
     case small
     
     /**
-      .fraction(0.5)
+      The system detent for a sheet that’s approximately half the height of the screen, and is inactive in compact height.
      */
     case medium
     
     /**
-      .fraction(0.9)
+      The system detent for a sheet at full height.
      */
     case large
     
     /**
-      CGFloat 0 to 1
+       A custom detent with the specified fractional height.
      */
     case fraction(CGFloat)
   
     /**
-      A constant height.
+     A custom detent with the specified height.
      */
     case height(CGFloat)
 

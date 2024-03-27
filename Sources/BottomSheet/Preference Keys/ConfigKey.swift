@@ -12,7 +12,6 @@ struct SheetPlusConfig: Equatable {
     @Binding var selectedDetent: PresentationDetent
     let translation: CGFloat
     
-    
     static func == (lhs: SheetPlusConfig, rhs: SheetPlusConfig) -> Bool {
         return lhs.selectedDetent == rhs.selectedDetent && lhs.translation == rhs.translation && lhs.detents == rhs.detents
     }
@@ -25,8 +24,3 @@ struct SheetPlusKey: PreferenceKey {
         value = nextValue()
     }
 }
-
-        /// This prevents the translation changes to be called whenever the keyboard is triggered.
-        /// If the keyboard gets triggered it will also reset the whole configkey and losing the binding.
-        /// https://stackoverflow.com/questions/67644164/preferencekey-issue-swiftui-sometimes-seems-to-generate-additional-views-that
-//        value = nextValue() != defaultValue ? nextValue() : value

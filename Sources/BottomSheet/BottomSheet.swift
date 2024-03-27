@@ -55,7 +55,7 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
     func body(content: Content) -> some View {
         ZStack() {
             content
-                .allowsHitTesting(allowBackgroundInteraction == .disabled ? false : true)
+//                .allowsHitTesting(allowBackgroundInteraction == .disabled ? false : true)
                 .onChange(of: isPresented) { newValue in
                     guard let initialSelectedDetent = initialSelectedDetent else { return }
 
@@ -142,7 +142,7 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
                         let minValue = isInteractiveDismissDisabled && isPresented ? limits.min : 0
                         translation = min(limits.max, max(newValue, minValue))
 
-                        currentGlobalTranslation = translation
+//                        currentGlobalTranslation = translation
                     }
                     .onAnimationChange(of: translation) { value in
                         onDrag(value > 0 ? value : 0)
@@ -189,9 +189,9 @@ struct SheetPlus<HContent: View, MContent: View, Background: View>: ViewModifier
         .onPreferenceChange(SheetPlusIndicatorKey.self) { value in
             showDragIndicator = value
         }
-        .onPreferenceChange(SheetPlusBackgroundInteractionKey.self) { value in
-            allowBackgroundInteraction = value
-        }
+//        .onPreferenceChange(SheetPlusBackgroundInteractionKey.self) { value in
+//            allowBackgroundInteraction = value
+//        }
         .onPreferenceChange(SheetPlusInteractiveDismissDisabledKey.self) { value in
             isInteractiveDismissDisabled = value
         }

@@ -24,6 +24,9 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
     @State private var background: EquatableBackground?
     @State private var isInteractiveDismissDisabled = true
 
+    @State private var backgroundInteractionDetentLimit: PresentationDetent?
+    @State private var isBackgroundInteractionEnabled = true
+
     @State private var viewWillPresent = false
 
     let animationCurve: SheetAnimation
@@ -50,9 +53,14 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
         self.mainContent = mcontent()
     }
 
+    func isInteractionEnabled() -> Bool {
+        return true
+    }
+
     func body(content: Content) -> some View {
         ZStack {
             content
+                .allowsHitTesting(!isPresented || isBackgroundInteractionEnabled)
                 .zIndex(1)
                 .onChange(of: isPresented) { value in
                     if (value == true) {
@@ -69,67 +77,80 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
 
                     // VStack to keep the drag indicator and header at the top of the card
                     VStack(spacing: 0) {
+
+                        // Holds the background so it animates
                         VStack(spacing: 0) {
-                            if showDragIndicator == .visible {
-                                DragIndicator(
-                                    translation: $translation,
-                                    detents: detents
-                                )
+
+                            // Holds the header customization
+                            VStack(spacing: 0) {
+                                if showDragIndicator == .visible {
+                                    DragIndicator(
+                                        translation: $translation,
+                                        detents: detents
+                                    )
+                                }
+
+                                headerContent
+                                    .contentShape(Rectangle())
+                            }
+                            .gesture(
+                                DragGesture(coordinateSpace: .global)
+                                    .onChanged { value in
+                                        translation -= value.location.y - value.startLocation.y - newValue
+                                        newValue = value.location.y - value.startLocation.y
+
+                                        if startTime == nil {
+                                            startTime = value
+                                        }
+                                    }
+                                    .onEnded { value in
+                                        onDragEnded(with: value)
+                                    }
+                            )
+
+                            Spacer()
+
+//                            UIScrollViewWrapper(
+//                                translation: $translation,
+//                                preferenceKey: $sheetConfig,
+//                                isInteractiveDismissDisabled: $isInteractiveDismissDisabled,
+//                                limits: limits,
+//                                detents: detents
+//                            ) {
+                            HStack {
+                                Spacer()
+                                mainContent
+                                Spacer()
                             }
 
-                            headerContent
-                                .contentShape(Rectangle())
-                        }
-                        .gesture(
-                            DragGesture(coordinateSpace: .global)
-                                .onChanged { value in
-                                    translation -= value.location.y - value.startLocation.y - newValue
-                                    newValue = value.location.y - value.startLocation.y
 
-                                    if startTime == nil {
-                                        startTime = value
-                                    }
-                                }
-                                .onEnded { value in
-                                    onDragEnded(with: value)
-                                }
-                        )
+//                            }
 
-                        Spacer()
-
-                        UIScrollViewWrapper(
-                            translation: $translation,
-                            preferenceKey: $sheetConfig,
-                            isInteractiveDismissDisabled: $isInteractiveDismissDisabled,
-                            limits: limits,
-                            detents: detents
-                        ) {
-                            mainContent
+                            Spacer()
                         }
 
-                        Spacer()
                     }
+                    .background(
+                        ZStack() {
+                            background?.view
+                                .cornerRadius(cornerRadius ?? 0)
+                        }
+                    )
                     .frame(
                         width: UIScreen.main.bounds.width,
                         height: translation
                     )
                     .clipped()
-                    .background(
-                        ZStack(
-                            alignment: background?.alignment ?? .center
-                        ) {
-                            background?.view
-                        }
-                            .cornerRadius(cornerRadius ?? 0)
-                    )
                     .onChange(of: translation) { value in
                         let minLimit = isInteractiveDismissDisabled && isPresented ? limits.min : .zero
                         translation = min(limits.max, max(value, minLimit))
+
+                        if let interactionDetent = backgroundInteractionDetentLimit {
+                            isBackgroundInteractionEnabled = translation < interactionDetent.size
+                        }
                     }
                     .onAnimationChange(of: translation) { value in
                         onDrag(value > .zero ? value : .zero)
-
-                        print(translation)
 
                         if (translation == 0 && value == .zero) {
                             isPresented = false
@@ -161,6 +182,19 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
         .onPreferenceChange(SheetPlusIndicatorKey.self) { value in
             showDragIndicator = value
         }
+        .onPreferenceChange(SheetPlusBackgroundInteractionKey.self) { value in
+            // Custom assignment for now until I figure out a way to use SPBIK with a struct.
+            backgroundInteractionDetentLimit = PresentationBackgroundInteractionPlus.detent
+
+            if value == .automatic || value == .enabled {
+                isBackgroundInteractionEnabled = true
+                return
+            }
+
+            isBackgroundInteractionEnabled = false
+
+            print(isBackgroundInteractionEnabled)
+        }
         .onPreferenceChange(SheetPlusInteractiveDismissDisabledKey.self) { value in
             isInteractiveDismissDisabled = value
         }
@@ -179,7 +213,7 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
 
         // Calculate velocity based on pt/s so it matches the UIPanGesture
         let distance: CGFloat = value.translation.height
-        let time: CGFloat = value.time.timeIntervalSince(startTime!.time)
+        let time: CGFloat = startTime != nil ? value.time.timeIntervalSince(startTime!.time) : 0
 
         let yVelocity: CGFloat = -1 * ((distance / time) / 1000)
         startTime = nil

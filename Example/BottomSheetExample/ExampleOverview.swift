@@ -54,7 +54,7 @@ struct ExampleOverview: View {
             StaticScrollViewContent()
                 .presentationDetentsPlus(
                     [.height(380), .height(480), .large],
-                    selection: $settings.selectedDetent // .constant(.medium)
+                    selection: $settings.selectedDetent
                 )
                 .presentationDragIndicatorPlus(.visible)
 //                .presentationBackgroundInteractionPlus(.enabled(upThrough: .height(380)))
