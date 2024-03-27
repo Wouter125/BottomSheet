@@ -110,21 +110,19 @@ struct SheetPlusV2<HContent: View, MContent: View>: ViewModifier {
 
                             Spacer()
 
-//                            UIScrollViewWrapper(
-//                                translation: $translation,
-//                                preferenceKey: $sheetConfig,
-//                                isInteractiveDismissDisabled: $isInteractiveDismissDisabled,
-//                                limits: limits,
-//                                detents: detents
-//                            ) {
-                            HStack {
-                                Spacer()
-                                mainContent
-                                Spacer()
+                            UIScrollViewWrapper(
+                                translation: $translation,
+                                preferenceKey: $sheetConfig,
+                                isInteractiveDismissDisabled: $isInteractiveDismissDisabled,
+                                limits: limits,
+                                detents: detents
+                            ) {
+                                HStack {
+                                    Spacer()
+                                    mainContent
+                                    Spacer()
+                                }
                             }
-
-
-//                            }
 
                             Spacer()
                         }
