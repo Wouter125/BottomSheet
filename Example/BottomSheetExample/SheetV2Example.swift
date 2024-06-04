@@ -33,7 +33,7 @@ struct NavigationViewV2: View {
             }
         }
         .environmentObject(settings)
-        .sheetPlusV2(
+        .sheetPlus(
             isPresented: $settings.isPresented,
             header: {
                 Text("Test")
@@ -55,7 +55,7 @@ struct NavigationViewV2: View {
                 .presentationBackgroundPlus {
                     Color.yellow
                 }
-//                .presentationBackgroundInteractionPlus(.enabled(upThrough: .fraction(0.2)))
+                .presentationBackgroundInteractionPlus(.automatic)
                 .presentationDragIndicatorPlus(.visible)
                 .presentationCornerRadiusPlus(cornerRadius: 12)
                 .interactiveDismissDisabledPlus(false)

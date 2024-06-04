@@ -13,10 +13,6 @@ struct StocksExample: View {
 
     var body: some View {
         VStack {
-            Button(settings.isPresented ? "Close" : "Show") {
-                settings.isPresented.toggle()
-            }
-
             Button("Change") {
                 settings.selectedDetent = .large
             }
@@ -44,7 +40,6 @@ struct StocksHeader: View {
                     Text("From Yahoo Finance")
                         .foregroundColor(Color(UIColor.secondaryLabel))
                 }
-                .padding(.top, 10)
                 .padding(.bottom, 16)
 
                 Spacer()

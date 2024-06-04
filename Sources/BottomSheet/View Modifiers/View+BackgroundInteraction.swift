@@ -11,9 +11,15 @@ extension View {
     public func presentationBackgroundInteractionPlus(
         _ interaction: PresentationBackgroundInteractionPlus
     ) -> some View {
-        return self.preference(
-            key: SheetPlusBackgroundInteractionKey.self,
-            value: interaction
-        )
+        return transformPreference(SheetPlusBackgroundInteractionKey.self) { value in
+            switch interaction.kind {
+                case .automatic:
+                    value = nil
+                case .disabled:
+                    value = 0
+                case .enabled(let detent):
+                    value = detent?.size ?? 0
+            }
+        }
     }
 }

@@ -17,7 +17,7 @@ import SwiftUI
  - `height`: A constant height.
  */
 
-public enum PresentationDetent: Hashable {
+public enum PresentationDetent: Hashable, Sendable {
     /**
       The system detent for a sheet that’s approximately a quarter height of the screen, and is inactive in compact height.
      */
