@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6C0359AC2B496FB90012B90A /* SheetV2Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0359AB2B496FB90012B90A /* SheetV2Example.swift */; };
 		6C0BD46D27DA862D000AF3CD /* BottomSheetExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0BD46C27DA862D000AF3CD /* BottomSheetExampleApp.swift */; };
 		6C0BD47127DA862D000AF3CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47027DA862D000AF3CD /* Assets.xcassets */; };
 		6C0BD47427DA862D000AF3CD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C0BD47327DA862D000AF3CD /* Preview Assets.xcassets */; };
@@ -19,7 +18,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6C0359AB2B496FB90012B90A /* SheetV2Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetV2Example.swift; sourceTree = "<group>"; };
 		6C0BD46927DA862D000AF3CD /* BottomSheetExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BottomSheetExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C0BD46C27DA862D000AF3CD /* BottomSheetExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetExampleApp.swift; sourceTree = "<group>"; };
 		6C0BD47027DA862D000AF3CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -65,7 +63,6 @@
 			isa = PBXGroup;
 			children = (
 				6C0BD46C27DA862D000AF3CD /* BottomSheetExampleApp.swift */,
-				6C0359AB2B496FB90012B90A /* SheetV2Example.swift */,
 				6C763146283D774500463709 /* ExampleOverview.swift */,
 				6CF78516293D3703000E6581 /* Apple Applications */,
 				6C8CBF1B2AED12C60007E10E /* Examples */,
@@ -213,7 +210,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C0359AC2B496FB90012B90A /* SheetV2Example.swift in Sources */,
 				6C0BD46D27DA862D000AF3CD /* BottomSheetExampleApp.swift in Sources */,
 				6C8CBF1D2AED12E00007E10E /* StaticScrollViewExample.swift in Sources */,
 				6CDF5A0D27ED33C7004609F4 /* CornerRadius.swift in Sources */,
