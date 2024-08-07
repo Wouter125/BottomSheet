@@ -17,7 +17,7 @@ The library currently supports;
 
 Currently BottomSheet is only available through the [Swift Package Manager](https://swift.org/package-manager/) or manual install. 
 
-1. Installation through Swift Package Manager can be done by going to `File > Add Packages`. Then enter the following URL in the searchbar; `github.com/Wouter125/BottomSheet`.
+1. Installation through Swift Package Manager can be done by going to `File > Add Packages`. Then enter the following URL in the searchbar; `https://github.com/Wouter125/BottomSheet`.
 
 2. Manual installation can be done by cloning this repository and dragging all assets into your Xcode Project.
 
