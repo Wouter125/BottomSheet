@@ -7,25 +7,32 @@
 
 import SwiftUI
 
-// Currently using a global var.
-// Might want to rework this by setting up the view modifiers a bit different.
-// Probably something that we can hold translation in 1 var. Now both need to be in sync.
-var currentGlobalTranslation: CGFloat = 0
+public struct PresentationBackgroundInteractionPlus: Hashable, Sendable {
+    internal enum Kind: Hashable, Sendable {
+        case automatic
+        case disabled
+        case enabled(upThrough: PresentationDetent?)
+    }
 
-public enum PresentationBackgroundInteractionPlus {
-    case automatic
-    case disabled
-    case enabled
+    internal let kind: Kind
 
-    public static func enabled(upThrough detent: PresentationDetent) -> PresentationBackgroundInteractionPlus {
-        currentGlobalTranslation > detent.size ? .disabled : .enabled
+    internal init(kind: Kind) {
+        self.kind = kind
+    }
+
+    public static let automatic = Self.init(kind: .automatic)
+    public static let enabled = Self.init(kind: .enabled(upThrough: nil))
+    public static let disabled = Self.init(kind: .disabled)
+
+    public static func enabled(upThrough detent: PresentationDetent) -> Self {
+        .init(kind: .enabled(upThrough: detent))
     }
 }
 
 struct SheetPlusBackgroundInteractionKey: PreferenceKey {
-    static var defaultValue: PresentationBackgroundInteractionPlus = .automatic
+    static var defaultValue: CGFloat? = nil
 
-    static func reduce(value: inout PresentationBackgroundInteractionPlus, nextValue: () -> PresentationBackgroundInteractionPlus) {
+    static func reduce(value: inout CGFloat?, nextValue: () -> CGFloat?) {
         value = nextValue()
     }
 }

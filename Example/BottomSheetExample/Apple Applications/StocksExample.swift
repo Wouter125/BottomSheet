@@ -13,10 +13,6 @@ struct StocksExample: View {
 
     var body: some View {
         VStack {
-            Button("Close") {
-                settings.isPresented.toggle()
-            }
-
             Button("Change") {
                 settings.selectedDetent = .large
             }
@@ -26,6 +22,7 @@ struct StocksExample: View {
                 .navigationTitle("\(settings.translation.rounded())")
                 .onAppear {
                     settings.isPresented = true
+                    settings.selectedDetent = .medium
                     settings.activeSheetType = .stocks
                 }
         }
@@ -43,7 +40,6 @@ struct StocksHeader: View {
                     Text("From Yahoo Finance")
                         .foregroundColor(Color(UIColor.secondaryLabel))
                 }
-                .padding(.top, 10)
                 .padding(.bottom, 16)
 
                 Spacer()

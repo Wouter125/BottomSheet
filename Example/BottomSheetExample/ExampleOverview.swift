@@ -50,14 +50,24 @@ struct ExampleOverview: View {
                     [.height(244), .medium, .large],
                     selection: $settings.selectedDetent
                 )
+                .presentationBackgroundInteractionPlus(.automatic)
+                .presentationBackgroundPlus {
+                    Color(UIColor.secondarySystemBackground)
+                }
+                .presentationCornerRadiusPlus(cornerRadius: 12)
         case .staticScrollView:
             StaticScrollViewContent()
                 .presentationDetentsPlus(
-                    [.height(244), .height(380), .height(480), .large],
+                    [.height(380), .height(480), .large],
                     selection: $settings.selectedDetent
                 )
+                .presentationBackgroundInteractionPlus(.enabled(upThrough: .medium))
+                .presentationBackgroundPlus {
+                    Color(UIColor.red)
+                }
+                .presentationCornerRadiusPlus(cornerRadius: 12)
                 .presentationDragIndicatorPlus(.visible)
-                .presentationBackgroundInteractionPlus(.enabled(upThrough: .height(380)))
+                .interactiveDismissDisabledPlus(false)
         default:
             EmptyView()
         }
@@ -77,7 +87,7 @@ struct ExampleOverview: View {
                 .onAppear {
                     settings.isPresented = false
                     settings.activeSheetType = .home
-                    settings.selectedDetent = .medium
+                    settings.selectedDetent = .height(.zero)
                 }
             }
             .navigationViewStyle(.stack)
@@ -85,10 +95,6 @@ struct ExampleOverview: View {
         .environmentObject(settings)
         .sheetPlus(
             isPresented: $settings.isPresented,
-            background: (
-                Color(UIColor.secondarySystemBackground)
-                    .cornerRadius(12, corners: [.topLeft, .topRight])
-            ),
             onDrag: { translation in
                 settings.translation = translation
             },
