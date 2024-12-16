@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@frozen
 public enum VisibilityPlus {
     case hidden
     case visible
