@@ -54,13 +54,12 @@ Currently BottomSheet is only available through the [Swift Package Manager](http
     isPresented: $isPresented,
     background: (
         Color(UIColor.secondarySystemBackground)
-            .cornerRadius(12, corners: [.topLeft, .topRight])
     ),
     onDrag: { translation in
         print(translation)
-    }
-    header: { },
-    main: { 
+    },
+    header: { EmptyView() },
+    main: {
         EmptyView()
             .presentationDetentsPlus(
                 [.height(244), .fraction(0.4), .medium, .large],
@@ -68,7 +67,6 @@ Currently BottomSheet is only available through the [Swift Package Manager](http
             )
             .presentationDragIndicatorPlus(.visible)
             .presentationBackgroundInteractionPlus(.enabled(upThrough: .height(380)))
-            
     }
 )
 ```
